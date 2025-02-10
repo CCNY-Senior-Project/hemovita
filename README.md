@@ -18,7 +18,7 @@
 - **Scalability & Adaptability:** Designed for integration with various medical datasets.
 
 ## Project Workflow Diagram
-- ![image](https://github.com/user-attachments/assets/ff220634-bc65-45d7-b16a-0e8cd22d777d) *(Placeholder for an actual diagram—create one in Figma or draw.io)*
+- ![image](https://github.com/user-attachments/assets/ff220634-bc65-45d7-b16a-0e8cd22d777d) 
 
 ## Project Directory Structure
 ```plaintext
