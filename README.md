@@ -22,7 +22,7 @@
 
 ## Project Directory Structure
 ```plaintext
-NutriScan-AI/
+main/
 │── 📁 data/            # Sample bloodwork datasets (CSV, JSON, API responses)
 │── 📁 models/          # Trained machine learning models & weights
 │── 📁 src/             # Core application code (data processing, AI models, API logic)
