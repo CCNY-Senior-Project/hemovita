@@ -16,6 +16,7 @@ These patients, aged 19 to 78 years, complained of malaise and underwent consist
 over three months, with blood data analyses conducted before and after the therapy.
 
 Methodologies Used: The researchers employed "Kaneko's Method," which involves:
+
       Blood Data Analysis: Interpreting blood chemistry and complete blood count (CBC) data to       
       identify deviations from optimal ranges, indicating specific nutrient deficiencies or organ 
       dysfunctions.
@@ -26,3 +27,23 @@ Methodologies Used: The researchers employed "Kaneko's Method," which involves:
 
       Evaluation Tools: Utilizing the Anti-Aging QOL Common Questionnaire (AAQC-Questionnaire) to 
       assess the severity of physical and mental symptoms before and after the nutritional intervention.
+
+Findings: The study found significant improvements in patients' symptoms following personalized nutritional therapy:
+
+      Symptom Reduction: All symptoms tended to decrease after the therapy. Specifically, 23 out of 26 
+      physical symptoms and 15 out of 16 mental symptoms showed statistically significant improvements.
+
+      Total Severity Score: The mean total severity score decreased from 90.56 before therapy to 82.02 after 
+      three months of therapy.
+
+      Clinical Implication: The findings suggest that personalized nutritional interventions based on 
+      detailed blood data analysis can effectively address chronic symptoms and pre-disease conditions, offering a viable 
+      alternative to traditional drug treatments.
+
+Relevance to Project: This research provides us with an approach for developing an AI-powered system aimed at analyzing blood test results to 
+detect nutrient deficiencies and offer personalized supplement recommendations.
+
+
+
+
+
