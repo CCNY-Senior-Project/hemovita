@@ -1,0 +1,9 @@
+itle: "Personalized Nutritional Therapy Based on Blood Data Analysis for Malaise Patients"
+
+Authors: Minoru Arakaki, Li Li, Toshiyuki Kaneko, et al.
+
+Published: October 18, 2021
+
+Link to the Paper: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8538692/
+
+Problem Statement: The paper addresses the issue of undiagnosed malaise and pre-disease conditions that standard medical practices often overlook. It highlights the potential of using detailed blood data analysis to detect these conditions early and provide personalized nutritional interventions as an alternative to conventional drug treatments.
