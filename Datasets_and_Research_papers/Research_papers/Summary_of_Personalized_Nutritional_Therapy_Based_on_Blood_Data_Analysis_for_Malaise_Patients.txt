@@ -6,4 +6,23 @@ Published: October 18, 2021
 
 Link to the Paper: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8538692/
 
-Problem Statement: The paper addresses the issue of undiagnosed malaise and pre-disease conditions that standard medical practices often overlook. It highlights the potential of using detailed blood data analysis to detect these conditions early and provide personalized nutritional interventions as an alternative to conventional drug treatments.
+Problem Statement: The paper addresses the issue of undiagnosed malaise and pre-disease conditions 
+that standard medical practices often overlook. It highlights the potential of using detailed blood 
+data analysis to detect these conditions early and provide personalized nutritional interventions
+as an alternative to conventional drug treatments.
+
+Dataset Used: The study analyzed data from 253 patients who visited an outpatient clinic between 2018 and 2020. 
+These patients, aged 19 to 78 years, complained of malaise and underwent consistent nutritional therapy for 
+over three months, with blood data analyses conducted before and after the therapy.
+
+Methodologies Used: The researchers employed "Kaneko's Method," which involves:
+      Blood Data Analysis: Interpreting blood chemistry and complete blood count (CBC) data to       
+      identify deviations from optimal ranges, indicating specific nutrient deficiencies or organ 
+      dysfunctions.
+
+      Personalized Nutritional Therapy: Prescribing necessary nutrients such as proteins, vitamins, 
+      minerals, essential fatty acids, enzymes, and probiotics tailored to each patient's blood data. 
+      Dosages were adjusted based on follow-up blood tests every three months.
+
+      Evaluation Tools: Utilizing the Anti-Aging QOL Common Questionnaire (AAQC-Questionnaire) to 
+      assess the severity of physical and mental symptoms before and after the nutritional intervention.
