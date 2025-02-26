@@ -43,6 +43,19 @@ We analyzed **three existing blood screening projects** to understand their stre
 ✔ **AI-Driven Recommendations** – Suggests **vitamins and minerals** that improve nutrient absorption.  
 ✔ **Scalability** – Can integrate with various **biomedical datasets** for future expansion.  
 
+## Relevant Datasets
+We analyzed **three research articles** and selected **five datasets** to strengthen the depth of our project. These can be found in the Datasets and Research_papers folders
+
+### **1.
+
+### **2.
+
+### **3.
+
+### **4.
+
+### **5.
+
 ---
 
 ## Project Workflow Diagram
