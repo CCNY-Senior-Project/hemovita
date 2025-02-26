@@ -1,4 +1,4 @@
-itle: "Personalized Nutritional Therapy Based on Blood Data Analysis for Malaise Patients"
+Title: "Personalized Nutritional Therapy Based on Blood Data Analysis for Malaise Patients"
 
 Authors: Minoru Arakaki, Li Li, Toshiyuki Kaneko, et al.
 
