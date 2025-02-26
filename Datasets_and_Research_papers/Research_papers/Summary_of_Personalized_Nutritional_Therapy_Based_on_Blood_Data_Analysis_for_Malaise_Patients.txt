@@ -43,6 +43,9 @@ Findings: The study found significant improvements in patients' symptoms followi
 Relevance to Project: This research provides us with an approach for developing an AI-powered system aimed at analyzing blood test results to 
 detect nutrient deficiencies and offer personalized supplement recommendations.
 
+CITATION:
+Arakaki M, Li L, Kaneko T, Arakaki H, Fukumura H, Osaki C, Yonamine M, Fukuzawa Y. Personalized Nutritional Therapy Based on Blood Data Analysis for Malaise Patients. Nutrients. 2021 Oct 18;13(10):3641. doi: 10.3390/nu13103641. PMID: 34684641; PMCID: PMC8538692.
+
 
 
 
