@@ -46,15 +46,31 @@ We analyzed **three existing blood screening projects** to understand their stre
 ## Relevant Datasets
 We analyzed **three research articles** and selected **five datasets** to strengthen the depth of our project. These can be found in the Datasets and Research_papers folders
 
-### **1.
+### **1. Blood-Analysis Github**
+- **Features:** Detects various blood-related conditions using AI.
+- **Usability:** Uses deep learning for accurate predictions.
+- **Strength:** Lacks nutrient-specific recommendations.
 
-### **2.
+### **2. Hemo-Detect Github**
+- **Features:** Detects various blood-related conditions using AI.
+- **Usability:** Uses deep learning for accurate predictions.
+- **Strength:** Lacks nutrient-specific recommendations.
 
-### **3.
+### **3. Survival Analysis of Heart Failure Patients: A Case Study**
+- **Features:** Detects various blood-related conditions using AI.
+- **Usability:** Uses deep learning for accurate predictions.
+- **Strength:** Lacks nutrient-specific recommendations.
 
-### **4.
+### **4. Vitamin and Mineral Nutrition Information System - WHO**
+- **Features:** Detects various blood-related conditions using AI.
+- **Usability:** Uses deep learning for accurate predictions.
+- **Strength:** Lacks nutrient-specific recommendations.
 
-### **5.
+### **5.  NCHS Data Query System - CDC**
+- **Features:** Detects various blood-related conditions using AI.
+- **Usability:** Uses deep learning for accurate predictions.
+- **Strength:** Lacks nutrient-specific recommendations.
+
 
 ---
 
