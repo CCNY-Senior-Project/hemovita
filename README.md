@@ -1,22 +1,40 @@
-# HemoVita - AI-Driven Blood Screening System
+# 🩸 HemoVita - AI-Driven Blood Screening System  
+#### Empowering Personalized Healthcare Through AI  
 
-## Team Name
-**Theranos**
+## 🧑‍💻 Meet the Team  
+### **Project Manager & Developer** – Selma Doganata  
+📧 Contact: [Your Email]  
+Hello! I’m Selma, the Project Manager and Developer for HemoVita. My role involves overseeing the project's progress, coordinating team efforts, and ensuring smooth development.  
 
-## Team Members and Roles
-- **Selma Doganata** - Project Manager / Developer
-- **Jubyaid Uddin** - Machine Learning Engineer
-- **Rahat Rahman** - Researcher / Data Analyst
+### **Machine Learning Engineer** – Jubyaid Uddin  
+📧 Contact: [Your Email]  
+Hi, I’m Jubyaid! As the Machine Learning Engineer, I’m responsible for implementing AI models that analyze blood test data and provide personalized nutritional insights.  
 
-## Project Overview
-**HemaVita AI** is an **AI-powered blood screening system** designed to detect **nutrient deficiencies** and recommend **personalized supplement plans**. Using **machine learning**, the system analyzes blood test results, identifies key deficiencies, and suggests **supporting vitamins and minerals** to enhance absorption and effectiveness.
+### **Researcher & Data Analyst** – Rahat Rahman  
+📧 Contact: [Your Email]  
+Hey! I’m Rahat, the Researcher and Data Analyst for this project. My job is to curate high-quality datasets, research existing blood screening technologies, and ensure our AI model is data-driven and reliable.  
 
-### Features:
-- **Automated Bloodwork Analysis:** Identifies deficiencies in essential nutrients.
-- **Personalized Recommendations:** Suggests supplements and dietary adjustments.
-- **Absorption Optimization:** Recommends co-factors that improve nutrient uptake.
-- **Scalability & Adaptability:** Designed for integration with various medical datasets.
+---
 
+## 🩺 Application Overview  
+HemoVita is an **AI-powered blood screening system** that identifies nutrient deficiencies and provides **personalized supplement recommendations**. By analyzing blood test results, our system offers insights into an individual's nutritional status and suggests dietary improvements.  
+
+### 📌 Key Features  
+✅ **Automated Bloodwork Analysis** – AI-driven identification of essential nutrient deficiencies.  
+✅ **Personalized Recommendations** – Tailored supplement and dietary suggestions based on test results.  
+✅ **Absorption Optimization** – AI-suggested co-factors that enhance nutrient uptake.  
+✅ **Scalability & Adaptability** – Designed for integration with multiple medical datasets.  
+
+---
+
+## 🛠️ How HemoVita Stands Out  
+| **Feature** | **HemoVita** | **Existing Blood Screening Systems** |
+|------------|-------------|----------------------------------|
+| **Nutrient-Specific Analysis** | ✔ Focuses on **micronutrient deficiencies** | ❌ Primarily detects **diseases** |
+| **AI-Driven Recommendations** | ✔ Suggests **supplements and diet adjustments** | ❌ Limited to general **blood test interpretations** |
+| **Data Integration** | ✔ Can be integrated with **various medical datasets** | ❌ Often reliant on **fixed datasets** |
+
+---
 ## Research on Similar Projects
 We analyzed **three existing blood screening projects** to understand their strengths and areas for improvement.
 
