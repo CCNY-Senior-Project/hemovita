@@ -20,54 +20,54 @@ Hey! I’m Rahat, the Researcher and Data Analyst for this project. My job is to
 HemoVita is an **AI-powered blood screening system** that identifies nutrient deficiencies and provides **personalized supplement recommendations**. By analyzing blood test results, our system offers insights into an individual's nutritional status and suggests dietary improvements.  
 
 ### 📌 Key Features  
-✅ **Automated Bloodwork Analysis** – AI-driven identification of essential nutrient deficiencies.  
-✅ **Personalized Recommendations** – Tailored supplement and dietary suggestions based on test results.  
-✅ **Absorption Optimization** – AI-suggested co-factors that enhance nutrient uptake.  
-✅ **Scalability & Adaptability** – Designed for integration with multiple medical datasets.  
+✅ **Automated Bloodwork Analysis** – AI-driven deficiency detection  
+✅ **Personalized Recommendations** – Tailored supplement and diet plans  
+✅ **Absorption Optimization** – AI-suggested co-factors for better uptake  
+✅ **Scalability** – Integration with multiple medical datasets  
 
 ---
 
 ## 📌 Problem Definition & Scope  
 
 ### **🚨 Problem Statement**  
-Nutritional deficiencies affect billions worldwide, leading to significant health concerns such as anemia, osteoporosis, and weakened immune function. Despite advancements in blood screening, current systems primarily **detect diseases** rather than **prevent deficiencies**. Moreover, **generic supplement recommendations** often fail to consider **individual absorption factors**, leading to ineffective interventions.  
+Nutritional deficiencies affect billions, leading to conditions like anemia and osteoporosis. Current blood screening focuses on **disease detection**, while supplement recommendations remain **generic and ineffective** due to **individual absorption differences**.  
 
 ### **🎯 Target Application & Significance**  
-HemoVita aims to fill this gap by developing an **AI-driven blood screening system** that not only **identifies micronutrient deficiencies** but also **provides personalized supplement recommendations**. This approach enhances **diagnostic precision**, improves **nutrient absorption**, and ensures **scalability in medical applications**.  
+HemoVita bridges this gap by using **AI to detect deficiencies and provide personalized nutrition insights**, enhancing **diagnostic precision** and **nutrient absorption** while enabling scalability in healthcare.  
 
 ### **📌 Scope & Assumptions**  
 - **Scope:**  
-  - AI-based analysis of **blood test results** to detect **micronutrient deficiencies**.  
-  - Generation of **personalized dietary and supplement recommendations**.  
-  - Designed for **individuals, healthcare providers, and researchers**.  
-  - Potential future expansion to **wearable device integration and real-time monitoring**.  
+  - AI-based **blood test analysis** for **micronutrient deficiencies**  
+  - **Personalized supplement & diet recommendations**  
+  - Designed for **individuals, healthcare providers, and researchers**  
+  - Future **wearable device integration & real-time tracking**  
 
-- **Limitations & Assumptions:**  
-  - **Data availability:** Assumes access to **high-quality, diverse blood test datasets**.  
-  - **Medical guidance:** The system **does not replace** professional medical advice but serves as a **decision-support tool**.  
-  - **User compliance:** The effectiveness of recommendations depends on **users following AI-generated insights**.  
-
----
-
-## 📌 Why This Project?  
-The increasing prevalence of **nutritional deficiencies** worldwide highlights the need for **accessible, AI-powered blood screening**. Many current diagnostic systems focus on disease detection rather than **preventative healthcare**. Our goal is to **bridge this gap** by developing an intuitive tool that empowers individuals to **monitor their nutritional status and make data-driven health decisions**.  
+- **Assumptions & Limitations:**  
+  - **High-quality blood test data** availability is essential  
+  - **Does not replace medical professionals** but aids decision-making  
+  - **User compliance** impacts effectiveness  
 
 ---
 
 ## 🛠️ How HemoVita Stands Out  
-| **Feature** | **HemoVita** | **Existing Blood Screening Systems** |
-|------------|-------------|----------------------------------|
-| **Nutrient-Specific Analysis** | ✔ Focuses on **micronutrient deficiencies** | ❌ Primarily detects **diseases** |
-| **AI-Driven Recommendations** | ✔ Suggests **supplements and diet adjustments** | ❌ Limited to general **blood test interpretations** |
-| **Data Integration** | ✔ Can be integrated with **various medical datasets** | ❌ Often reliant on **fixed datasets** |
+| **Feature** | **HemoVita** | **Existing Systems** |
+|------------|-------------|--------------------|
+| **Nutrient-Specific Analysis** | ✔ Focuses on **micronutrient deficiencies** | ❌ Detects **diseases only** |
+| **AI-Driven Recommendations** | ✔ Personalized **supplements & diet** | ❌ Generic **interpretations** |
+| **Data Integration** | ✔ Connects to **medical datasets** | ❌ Limited **scalability** |
 
 ---
 
 ## 🌎 Who is it for?  
-🩸 **Patients & Individuals** – Gain **insights into nutrient deficiencies** and optimize your diet.  
-🏥 **Healthcare Professionals** – Use AI-powered tools to **assist in medical diagnostics**.  
-🔬 **Researchers & Data Scientists** – Contribute to **open-source AI for blood screening**.  
-💊 **Supplement & Nutrition Companies** – Leverage AI-driven insights for **personalized health solutions**.  
+🩸 **Patients & Individuals** – Track and optimize **nutrient intake**  
+🏥 **Healthcare Providers** – AI-powered **clinical decision support**  
+🔬 **Researchers & Data Scientists** – Contribute to **nutritional AI research**  
+💊 **Supplement & Nutrition Companies** – Personalize **product recommendations**  
+
+---
+
+## 📌 Why This Project?  
+With **nutritional deficiencies on the rise**, HemoVita shifts healthcare from **reactive disease treatment** to **preventative, AI-driven nutrition insights**—empowering users to make **data-driven health decisions**.  
 
 ---
 
