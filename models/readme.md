@@ -5,7 +5,8 @@ The choice of model architectures plays a crucial role in:
 - Extracting meaningful insights from bloodwork data
 - Improving accuracy in detecting deficiencies
 - Providing explainable AI recommendations for supplementation
-- ## Existing Technologies and Methodologies
+
+## Existing Technologies and Methodologies
 
 Several existing machine learning and deep learning architectures are relevant to this problem. Below are three commonly used approaches in similar applications:
 
