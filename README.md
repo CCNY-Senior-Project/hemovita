@@ -39,22 +39,3 @@ HemoVita is an **AI-powered blood screening system** that identifies nutrient de
 ## Project Workflow Diagram
 ![image](https://github.com/user-attachments/assets/b781e4a9-81b6-437e-8c01-ecf27c9f7aea)
  
-
-## Project Directory Structure
-```plaintext
-main/
-│── 📁 data/            # Sample bloodwork datasets (CSV, JSON, API responses)
-│── 📁 models/          # Trained machine learning models & weights
-│── 📁 src/             # Core application code (data processing, AI models, API logic)
-│   ├── preprocessing/  # Data cleaning and normalization scripts
-│   ├── analysis/       # Deficiency detection & recommendation engine
-│   ├── api/            # Backend API endpoints (Flask/FastAPI)
-│── 📁 docs/            # Project documentation, research papers, and references
-│── 📁 assets/          # UI mockups, UML diagrams, figures
-│── 📁 notebooks/       # Jupyter notebooks for model training, testing, and visualization
-│── 📁 tests/           # Unit tests and validation scripts
-│── 📄 README.md        # Project overview and setup instructions
-│── 📄 requirements.txt # List of dependencies and installation guide
-│── 📄 app.py           # Main application entry point (if applicable)
-│── 📄 config.py        # Configuration settings for the application
-│── 📄 .gitignore       # Files and directories to ignore in version control 
