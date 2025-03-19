@@ -1,12 +1,14 @@
 Performance Metrics for Model
   Mean Absolute Error (MAE): measures average absolute error between the predicted and the acutal values; helpful to understand prediciton accuracy
   Root Mean Squared Error (RMSE): Penalizes larger errors more than MAE, useful to detect outliers
+    May not use due to its complexity to interpret
   Mean Squared Logarithmic Error (MSLE): Good for handling skewed data, especially if he blood results of exponential variations
 
 
 Metrics for Lifestyle Recommendations
   Mean Absolute Error (MAE) : measures overall prediciton accuracy of blood marker values
   Root Mean Squared Error (RMSE): Highlights large deviations in predictions; this is useful for identifying extreme deficiencies like anemia
+    may not use due to its complexity to interpret
   R^2 score: Evaluates how well the model explains the variation in blood results
   F-1 score: Important for classifying whether the user is deficient, borderline, or sufficient in some nutrient
   Feaure importance scores: helps to determine which blood markers contribute the most to lifestyle change recommendations
