@@ -41,11 +41,6 @@ The increasing prevalence of **nutritional deficiencies** worldwide highlights t
 
 ---
 
-## Project Workflow Diagram  
-![image](https://github.com/user-attachments/assets/b781e4a9-81b6-437e-8c01-ecf27c9f7aea)  
-
----
-
 ## 🌎 Who is it for?  
 🩸 **Patients & Individuals** – Gain **insights into nutrient deficiencies** and optimize your diet.  
 🏥 **Healthcare Professionals** – Use AI-powered tools to **assist in medical diagnostics**.  
@@ -53,3 +48,7 @@ The increasing prevalence of **nutritional deficiencies** worldwide highlights t
 💊 **Supplement & Nutrition Companies** – Leverage AI-driven insights for **personalized health solutions**.  
 
 ---
+
+## Project Workflow Diagram  
+![image](https://github.com/user-attachments/assets/b781e4a9-81b6-437e-8c01-ecf27c9f7aea)  
+
