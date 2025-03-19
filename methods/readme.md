@@ -41,7 +41,7 @@ Different types of evaluation metrics are used based on the **model type and pre
 
 ---
 
-## Reproducible Sources
+## Sources
 
 ### Public Datasets:
 1. **Vitamin and Mineral Nutrition Information System (WHO)** - Global micronutrient deficiencies data: [Link](https://www.who.int/data)
@@ -60,10 +60,9 @@ Different types of evaluation metrics are used based on the **model type and pre
 ### Limitations & Potential Improvements:
 - **Medical Context Awareness:** Many existing metrics do not account for **clinical impact** (e.g., missing a critical deficiency).
 - **Handling Imbalanced Data:** Precision/Recall tradeoffs need to be optimized for rare deficiencies.
-- **Trust & Explainability Gaps:** Existing AI models lack widespread **clinician adoption** due to transparency concerns.
 
 ### Proposed Enhancements:
 - **Clinical Impact-Driven Metrics:** Develop metrics incorporating **medical risks** of false positives/negatives.
 - **Hybrid Model Evaluation:** Combine **traditional ML metrics + calibration + explainability tools**.
-- **Benchmarking Framework:** Create a standardized **blood test AI evaluation toolkit** for research integration.
+
 
