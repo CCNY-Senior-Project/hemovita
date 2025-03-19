@@ -1,0 +1,12 @@
+Metrics for Lifestyle Recommendations
+  Mean Absolute Error (MAE) : measures overall prediciton accuracy of blood marker values
+  Root Mean Squared Error (RMSE): Highlights large deviations in predictions; this is useful for identifying extreme deficiencies like anemia
+  R^2 score: Evaluates how well the model explains the variation in blood results
+  F-1 score: Important for classifying whether the user is deficient, borderline, or sufficient in some nutrient
+  Feaure importance scores: helps to determine which blood markers contribute the most to lifestyle change recommendations
+
+Metrics Specfic to supplement suggestion
+  Dosages for supplementaion
+  Pre and post blood levels : measure the changes in markers after following supplement recommendation to gage if effective 
+  Effectiveness of supplementation: percetange of users who wo improvements after the apprpriate time 
+  
