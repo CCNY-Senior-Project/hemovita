@@ -3,13 +3,6 @@
 ## Overview
 The **Evaluation Metrics** subtask focuses on selecting and analyzing performance metrics to assess the effectiveness of machine learning models in detecting nutrient deficiencies from bloodwork data. Proper evaluation ensures that the model is **accurate, interpretable, and clinically reliable**, which is crucial for making **personalized supplement recommendations**.
 
-## Relevance to the Overall Problem
-Evaluation metrics help determine the **reliability and clinical applicability** of HemoVita AI. The right set of metrics ensures:
-- **Accurate Deficiency Detection** – Models should correctly identify nutrient imbalances.
-- **Minimal False Diagnoses** – Ensuring a low false positive/negative rate to avoid incorrect recommendations.
-- **Clinical Trustworthiness** – The system should be interpretable for medical professionals.
-- **Scalability & Adaptability** – Evaluation metrics should allow comparison across various datasets.
-
 ## Existing Technologies and Methodologies
 
 Different types of evaluation metrics are used based on the **model type and prediction task**. Below are three key categories:
