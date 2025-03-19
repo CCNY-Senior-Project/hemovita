@@ -3,15 +3,15 @@
 
 ## 🧑‍💻 Meet the Team  
 ### **Project Manager & Developer** – Selma Doganata  
-📧 Contact: [Your Email]  
+📧 Contact: [sdogana000@citymail.cuny.edu]  
 Hello! I’m Selma, the Project Manager and Developer for HemoVita. My role involves overseeing the project's progress, coordinating team efforts, and ensuring smooth development.  
 
 ### **Machine Learning Engineer** – Jubyaid Uddin  
-📧 Contact: [Your Email]  
+📧 Contact: [juddin002@citymail.cuny.edu]  
 Hi, I’m Jubyaid! As the Machine Learning Engineer, I’m responsible for implementing AI models that analyze blood test data and provide personalized nutritional insights.  
 
 ### **Researcher & Data Analyst** – Rahat Rahman  
-📧 Contact: [Your Email]  
+📧 Contact: [rrahman008@citymail.cuny.edu]  
 Hey! I’m Rahat, the Researcher and Data Analyst for this project. My job is to curate high-quality datasets, research existing blood screening technologies, and ensure our AI model is data-driven and reliable.  
 
 ---
