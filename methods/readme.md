@@ -13,7 +13,6 @@ Different types of evaluation metrics are used based on the **model type and pre
 - **F1 Score**: Balances precision and recall, useful for imbalanced datasets.
 - **AUROC (Area Under the Receiver Operating Characteristic Curve)**: Measures the ability to distinguish between deficient and non-deficient cases.
 
-📌 **Applicability:** Essential for models classifying blood samples as deficient/non-deficient.
 
 **References:**
 - Sokolova, M., & Lapalme, G. (2009). *A systematic analysis of performance measures for classification tasks*. Information Processing & Management. [DOI:10.1016/j.ipm.2009.03.002](https://doi.org/10.1016/j.ipm.2009.03.002)
@@ -25,7 +24,6 @@ Different types of evaluation metrics are used based on the **model type and pre
 - **Mean Squared Error (MSE) & Root Mean Squared Error (RMSE)**: Penalizes larger errors more heavily.
 - **R² Score (Coefficient of Determination)**: Measures how well the model explains variance in blood nutrient levels.
 
-📌 **Applicability:** Useful when predicting **exact nutrient levels** instead of binary classification.
 
 **References:**
 - Willmott, C. J., & Matsuura, K. (2005). *Advantages of the mean absolute error (MAE) over the root mean square error (RMSE) in assessing average model performance*. Climate Research. [DOI:10.3354/cr010079](https://doi.org/10.3354/cr010079)
@@ -37,7 +35,6 @@ Different types of evaluation metrics are used based on the **model type and pre
 - **LIME (Local Interpretable Model-Agnostic Explanations)**: Provides local feature importance.
 - **Calibration Metrics (Brier Score, Reliability Diagrams)**: Ensures the model’s confidence matches reality.
 
-📌 **Applicability:** Essential for **medical adoption** to ensure doctors and researchers trust AI-based diagnoses.
 
 **References:**
 - Ribeiro, M. T., Singh, S., & Guestrin, C. (2016). *"Why Should I Trust You?" Explaining the Predictions of Any Classifier*. Proceedings of the 22nd ACM SIGKDD. [DOI:10.1145/2939672.2939778](https://doi.org/10.1145/2939672.2939778)
