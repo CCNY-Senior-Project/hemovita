@@ -27,6 +27,28 @@ HemoVita is an **AI-powered blood screening system** that identifies nutrient de
 
 ---
 
+## 📌 Problem Definition & Scope  
+
+### **🚨 Problem Statement**  
+Nutritional deficiencies affect billions worldwide, leading to significant health concerns such as anemia, osteoporosis, and weakened immune function. Despite advancements in blood screening, current systems primarily **detect diseases** rather than **prevent deficiencies**. Moreover, **generic supplement recommendations** often fail to consider **individual absorption factors**, leading to ineffective interventions.  
+
+### **🎯 Target Application & Significance**  
+HemoVita aims to fill this gap by developing an **AI-driven blood screening system** that not only **identifies micronutrient deficiencies** but also **provides personalized supplement recommendations**. This approach enhances **diagnostic precision**, improves **nutrient absorption**, and ensures **scalability in medical applications**.  
+
+### **📌 Scope & Assumptions**  
+- **Scope:**  
+  - AI-based analysis of **blood test results** to detect **micronutrient deficiencies**.  
+  - Generation of **personalized dietary and supplement recommendations**.  
+  - Designed for **individuals, healthcare providers, and researchers**.  
+  - Potential future expansion to **wearable device integration and real-time monitoring**.  
+
+- **Limitations & Assumptions:**  
+  - **Data availability:** Assumes access to **high-quality, diverse blood test datasets**.  
+  - **Medical guidance:** The system **does not replace** professional medical advice but serves as a **decision-support tool**.  
+  - **User compliance:** The effectiveness of recommendations depends on **users following AI-generated insights**.  
+
+---
+
 ## 📌 Why This Project?  
 The increasing prevalence of **nutritional deficiencies** worldwide highlights the need for **accessible, AI-powered blood screening**. Many current diagnostic systems focus on disease detection rather than **preventative healthcare**. Our goal is to **bridge this gap** by developing an intuitive tool that empowers individuals to **monitor their nutritional status and make data-driven health decisions**.  
 
@@ -51,4 +73,3 @@ The increasing prevalence of **nutritional deficiencies** worldwide highlights t
 
 ## Project Workflow Diagram  
 ![image](https://github.com/user-attachments/assets/b781e4a9-81b6-437e-8c01-ecf27c9f7aea)  
-
