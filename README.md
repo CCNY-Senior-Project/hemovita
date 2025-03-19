@@ -27,6 +27,11 @@ HemoVita is an **AI-powered blood screening system** that identifies nutrient de
 
 ---
 
+## 📌 Why This Project?  
+The increasing prevalence of **nutritional deficiencies** worldwide highlights the need for **accessible, AI-powered blood screening**. Many current diagnostic systems focus on disease detection rather than **preventative healthcare**. Our goal is to **bridge this gap** by developing an intuitive tool that empowers individuals to **monitor their nutritional status and make data-driven health decisions**.  
+
+---
+
 ## 🛠️ How HemoVita Stands Out  
 | **Feature** | **HemoVita** | **Existing Blood Screening Systems** |
 |------------|-------------|----------------------------------|
@@ -36,6 +41,15 @@ HemoVita is an **AI-powered blood screening system** that identifies nutrient de
 
 ---
 
-## Project Workflow Diagram
-![image](https://github.com/user-attachments/assets/b781e4a9-81b6-437e-8c01-ecf27c9f7aea)
- 
+## Project Workflow Diagram  
+![image](https://github.com/user-attachments/assets/b781e4a9-81b6-437e-8c01-ecf27c9f7aea)  
+
+---
+
+## 🌎 Who is it for?  
+🩸 **Patients & Individuals** – Gain **insights into nutrient deficiencies** and optimize your diet.  
+🏥 **Healthcare Professionals** – Use AI-powered tools to **assist in medical diagnostics**.  
+🔬 **Researchers & Data Scientists** – Contribute to **open-source AI for blood screening**.  
+💊 **Supplement & Nutrition Companies** – Leverage AI-driven insights for **personalized health solutions**.  
+
+---
