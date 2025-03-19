@@ -43,20 +43,10 @@ Different types of evaluation metrics are used based on the **model type and pre
 
 ## Reproducible Sources
 
-### Open-Source Code Repositories:
-1. **Scikit-learn Metrics Module** - Contains standard evaluation metrics for classification and regression: [Link](https://scikit-learn.org/stable/modules/model_evaluation.html)
-2. **SHAP GitHub Repository** - Implementation of SHAP explainability framework: [Link](https://github.com/slundberg/shap)
-3. **LIME GitHub Repository** - Implementation of LIME for model interpretation: [Link](https://github.com/marcotcr/lime)
-
 ### Public Datasets:
 1. **Vitamin and Mineral Nutrition Information System (WHO)** - Global micronutrient deficiencies data: [Link](https://www.who.int/data)
 2. **MIMIC-III Clinical Database** - Real-world electronic health records: [Link](https://physionet.org/content/mimic3/)
 3. **Blood Chemistry Dataset (Kaggle)** - Blood test records for AI model evaluation: [Link](https://www.kaggle.com/datasets)
-
-### Pretrained Models and Documentation:
-1. **XGBoost for Medical Data** - [Link](https://github.com/dmlc/xgboost)
-2. **TensorFlow Model Evaluation Toolkit** - [Link](https://www.tensorflow.org/tfx/guide/model_eval)
-3. **Fairlearn (Fairness & Explainability for AI in Healthcare)** - [Link](https://github.com/fairlearn/fairlearn)
 
 ---
 
