@@ -35,12 +35,13 @@ Nutritional deficiencies affect billions, leading to conditions like anemia and 
 ### **🎯 Target Application & Significance**  
 HemoVita bridges this gap by using **AI to detect deficiencies and provide personalized nutrition insights**, enhancing **diagnostic precision** and **nutrient absorption** while enabling scalability in healthcare.  
 
+HemoVita aims to fill this gap by developing an **AI-driven blood screening system** that not only **identifies micronutrient deficiencies** but also **provides personalized supplement recommendations**. This approach enhances **diagnostic precision**, and improves **nutrient absorption**.
+
 ### **📌 Scope & Assumptions**  
 - **Scope:**  
   - AI-based **blood test analysis** for **micronutrient deficiencies**  
   - **Personalized supplement & diet recommendations**  
   - Designed for **individuals, healthcare providers, and researchers**  
-  - Future **wearable device integration & real-time tracking**  
 
 - **Assumptions & Limitations:**  
   - **High-quality blood test data** availability is essential  
