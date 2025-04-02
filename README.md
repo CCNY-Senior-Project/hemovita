@@ -46,7 +46,21 @@ HemoVita aims to fill this gap by developing an **AI-driven blood screening syst
 - **Assumptions & Limitations:**  
   - **High-quality blood test data** availability is essential  
   - **Does not replace medical professionals** but aids decision-making  
-  - **User compliance** impacts effectiveness  
+  - **User compliance** impacts effectiveness
+---
+## 🔧 Project Subtasks
+
+### 1. **Blood Test Data Parsing & Preprocessing**  
+Transform raw blood test reports (PDFs or EHR exports) into clean, standardized data tables.  
+- Tool Used: **Camelot** for PDF parsing, **Pandas** for label/unit standardization, **SimpleImputer** for handling missing values.
+
+### 2. **Micronutrient Deficiency Detection via AI**  
+Train machine learning models to detect nutritional deficiencies from parsed bloodwork data.  
+- Tool Used: **XGBoost** for classification, **AutoGluon** for AutoML experimentation, **SHAP** for model explainability.
+
+### 3. **Absorption Optimization Modeling**  
+Build nutrient interaction graphs to recommend co-factors that improve supplement absorption.  
+- Tool Used: **NetworkX** for interaction modeling, **PubTator** for biomedical relation mining, **Wikidata SPARQL** for ontology queries.
 
 ---
 
