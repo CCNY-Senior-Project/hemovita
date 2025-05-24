@@ -1,90 +1,86 @@
-# 🩸 HemoVita - AI-Driven Blood Screening System  
-#### Empowering Personalized Healthcare Through AI  
-
-## 🧑‍💻 Meet the Team  
-### **Project Manager & Developer** – Selma Doganata  
-📧 Contact: [sdogana000@citymail.cuny.edu]  
-Hello! I’m Selma, the Project Manager and Developer for HemoVita. My role involves overseeing the project's progress, coordinating team efforts, and ensuring smooth development.  
-
-### **Machine Learning Engineer** – Jubyaid Uddin  
-📧 Contact: [juddin002@citymail.cuny.edu]  
-Hi, I’m Jubyaid! As the Machine Learning Engineer, I’m responsible for implementing AI models that analyze blood test data and provide personalized nutritional insights.  
-
-### **Researcher & Data Analyst** – Rahat Rahman  
-📧 Contact: [rrahman008@citymail.cuny.edu]  
-Hey! I’m Rahat, the Researcher and Data Analyst for this project. My job is to curate high-quality datasets, research existing blood screening technologies, and ensure our AI model is data-driven and reliable.  
+# 🩸 HemoVita – AI-Driven Blood Screening System  
+**Empowering Personalized Healthcare Through AI**
 
 ---
 
-## 🩺 Application Overview  
-HemoVita is an **AI-powered blood screening system** that identifies nutrient deficiencies and provides **personalized supplement recommendations**. By analyzing blood test results, our system offers insights into an individual's nutritional status and suggests dietary improvements.  
+## 💡 Why HemoVita?  
+Micronutrient deficiencies—especially in Iron, B12, and Vitamin D—are common, underdiagnosed, and difficult for non-experts to interpret. HemoVita transforms raw blood test data into clear, personalized health recommendations using AI.  
 
-### 📌 Key Features  
-✅ **Automated Bloodwork Analysis** – AI-driven deficiency detection  
-✅ **Personalized Recommendations** – Tailored supplement and diet plans  
-✅ **Absorption Optimization** – AI-suggested co-factors for better uptake  
-✅ **Scalability** – Integration with multiple medical datasets  
+Built for accessibility, HemoVita empowers users to understand their nutrient status and take action—without needing a clinician to decode lab reports.  
 
 ---
 
-## 📌 Problem Definition & Scope  
+## 👩‍💻 Meet the Team  
+**Project Manager & Developer** – *Selma Doganata*  
+📧 sdogana000@citymail.cuny.edu  
+Oversees technical development and system design.
 
-### **🚨 Problem Statement**  
-Nutritional deficiencies affect billions, leading to conditions like anemia and osteoporosis. Current blood screening focuses on **disease detection**, while supplement recommendations remain **generic and ineffective** due to **individual absorption differences**.  
+**Machine Learning Engineer** – *Jubyaid Uddin*  
+📧 juddin002@citymail.cuny.edu  
+Develops ML models for nutrient deficiency classification and interpretability.
 
-### **🎯 Target Application & Significance**  
-HemoVita bridges this gap by using **AI to detect deficiencies and provide personalized nutrition insights**, enhancing **diagnostic precision** and **nutrient absorption** while enabling scalability in healthcare.  
-
-HemoVita aims to fill this gap by developing an **AI-driven blood screening system** that not only **identifies micronutrient deficiencies** but also **provides personalized supplement recommendations**. This approach enhances **diagnostic precision**, and improves **nutrient absorption**.
-
-### **📌 Scope & Assumptions**  
-- **Scope:**  
-  - AI-based **blood test analysis** for **micronutrient deficiencies**  
-  - **Personalized supplement & diet recommendations**  
-  - Designed for **individuals, healthcare providers, and researchers**  
-
-- **Assumptions & Limitations:**  
-  - **High-quality blood test data** availability is essential  
-  - **Does not replace medical professionals** but aids decision-making  
-  - **User compliance** impacts effectiveness
----
-## 🔧 Project Subtasks
-
-### 1. **Blood Test Data Parsing & Preprocessing**  
-Transform raw blood test reports (PDFs or EHR exports) into clean, standardized data tables.  
-- Tool Used: **Camelot** for PDF parsing, **Pandas** for label/unit standardization, **SimpleImputer** for handling missing values.
-
-### 2. **Micronutrient Deficiency Detection via AI**  
-Train machine learning models to detect nutritional deficiencies from parsed bloodwork data.  
-- Tool Used: **XGBoost** for classification, **AutoGluon** for AutoML experimentation, **SHAP** for model explainability.
-
-### 3. **Absorption Optimization Modeling**  
-Build nutrient interaction graphs to recommend co-factors that improve supplement absorption.  
-- Tool Used: **NetworkX** for interaction modeling, **PubTator** for biomedical relation mining, **Wikidata SPARQL** for ontology queries.
+**Researcher & Data Analyst** – *Rahat Rahman*  
+📧 rrahman008@citymail.cuny.edu  
+Curates datasets, establishes clinical thresholds, and supports validation.
 
 ---
 
-## 🛠️ How HemoVita Stands Out  
-| **Feature** | **HemoVita** | **Existing Systems** |
-|------------|-------------|--------------------|
-| **Nutrient-Specific Analysis** | ✔ Focuses on **micronutrient deficiencies** | ❌ Detects **diseases only** |
-| **AI-Driven Recommendations** | ✔ Personalized **supplements & diet** | ❌ Generic **interpretations** |
-| **Data Integration** | ✔ Connects to **medical datasets** | ❌ Limited **scalability** |
+## 🔬 Scientific Foundation  
+Deficiencies are detected using a hybrid method:  
+
+- **Rule-Based Thresholding**  
+  - *Iron*: Ferritin < 30 µg/L, MCV < 80 fL  
+  - *B12*: B12 < 200 ng/L  
+  - *Vitamin D*: 25-OH Vit D < 20 ng/mL  
+
+- **Machine Learning Classification**  
+  - Triggered for overlapping or borderline cases using tabular lab data and XGBoost.
 
 ---
 
-## 🌎 Who is it for?  
-🩸 **Patients & Individuals** – Track and optimize **nutrient intake**  
-🏥 **Healthcare Providers** – AI-powered **clinical decision support**  
-🔬 **Researchers & Data Scientists** – Contribute to **nutritional AI research**  
-💊 **Supplement & Nutrition Companies** – Personalize **product recommendations**  
+## 🔄 System Pipeline  
+
+1. **Data Upload & Extraction**  
+   Users submit PDFs or CSVs of blood tests. The system uses structured parsing and, soon, OCR to extract lab values such as Ferritin, MCV, RDW, B12, and Vitamin D.
+
+2. **Preprocessing & Normalization**  
+   Extracted values are cleaned, converted to standard units, and mapped to expected input formats. Missing data is handled via imputation or flagged for user review.
+
+3. **Deficiency Detection**  
+   A hybrid approach is applied:  
+   - **Threshold-based rules** identify deficiencies in clear cases.  
+   - **XGBoost classifier** is used for nuanced or conflicting signals, combining features like RDW, MCV, and B12.
+
+4. **Nutrient Interaction Modeling**  
+   Once a deficiency is detected, the system evaluates nutrient interdependencies using a **knowledge graph** derived from clinical literature (e.g., Iron-B12 synergy, B12–Folate overlap).  
+   This modeling ensures:  
+   - No redundant supplementation  
+   - Improved recommendations when multiple deficiencies co-occur
+
+5. **Recommendation Engine**  
+   Personalized supplement suggestions are generated based on the detected deficiencies and their interactions. Outputs are filtered through dosage safety checks and linked to common clinical guidelines.
+
+6. **Interpretability & Transparency**  
+   With SHAP values, users can see which biomarkers contributed most to the model’s decision—making results understandable and trustworthy.
+
+7. **Results Interface** *(in development)*  
+   A clean dashboard will visualize current results, previous uploads, and improvement over time—powered by Streamlit or Power BI.
 
 ---
 
-## 📌 Why This Project?  
-With **nutritional deficiencies on the rise**, HemoVita shifts healthcare from **reactive disease treatment** to **preventative, AI-driven nutrition insights**—empowering users to make **data-driven health decisions**.  
+## 🛠️ Tech Stack  
 
----
+### Backend  
+- **Python (FastAPI)** – Web API and logic  
+- **XGBoost** – ML classification  
+- **SHAP** – Interpretability  
+- **AutoGluon** – Model benchmarking  
+- **Optuna** – Hyperparameter tuning  
 
-## Project Workflow Diagram  
-![image](https://github.com/user-attachments/assets/b781e4a9-81b6-437e-8c01-ecf27c9f7aea)  
+### Frontend  
+- **Next.js** – Web framework  
+- **Tailwind CSS** – Styling  
+- **Axios** – API calls  
+
+### Database  
+- **SQLite** (initial) → **PostgreSQL** (scalable)
