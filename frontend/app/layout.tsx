@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "HemoVita",
-  description: "Track hematology and micronutrient labs with clarity."
+  description: "Track hematology and micronutrient labs with clarity.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -17,12 +17,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={`${inter.className} gradient-bg min-h-screen bg-background`}>
         <AuthSessionProvider>
-          <div className="mx-auto flex min-h-screen w-full max-w-[1200px] flex-col px-6 pb-12">
-            <SiteHeader />
-            <main className="flex-1 py-10">{children}</main>
+          {/* Full-width header (not constrained by the page container) */}
+          <SiteHeader />
+
+          {/* Page container applies only to content */}
+          <div className="mx-auto w-full max-w-[1200px] px-6 pb-12">
+            <main className="py-10">{children}</main>
           </div>
         </AuthSessionProvider>
       </body>
     </html>
   );
 }
+

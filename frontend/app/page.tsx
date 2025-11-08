@@ -17,14 +17,13 @@ export default function LandingPage() {
     <div className="relative w-full">
       <section className="mx-auto grid max-w-4xl gap-10 text-center">
         <Badge variant="secondary" className="mx-auto px-4 py-1 uppercase tracking-wide text-xs text-muted-foreground">
-          Smarter hematology tracking
+          Smarter Micronutrient tracking
         </Badge>
         <h1 className="text-4xl font-semibold leading-tight sm:text-5xl">
           Understand your blood health with clarity and personalised guidance.
         </h1>
         <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-          HemoVita brings your hematology labs to life with modern visualisations, evidence-based reference ranges, and
-          a schedule you can take straight to your next appointment.
+          HemoVita transforms raw blood test data into clear, personalized health recommendations.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-4">
           <Button asChild size="lg">
