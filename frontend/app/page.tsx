@@ -7,16 +7,19 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 
 const highlights = [
-  "Evidence-informed reference ranges",
-  "Actionable follow-up plan in seconds",
-  "Secure account with NextAuth credentials"
+  "Accurate, clinically backed lab ranges",
+  "Instant, personalized guidance",
+  "Your data stays private and secure"
 ];
 
 export default function LandingPage() {
   return (
     <div className="relative w-full">
       <section className="mx-auto grid max-w-4xl gap-10 text-center">
-        <Badge variant="secondary" className="mx-auto px-4 py-1 uppercase tracking-wide text-xs text-muted-foreground">
+        <Badge
+          variant="secondary"
+          className="mx-auto px-4 py-1 uppercase tracking-wide text-xs text-muted-foreground"
+        >
           Smarter Micronutrient tracking
         </Badge>
         <h1 className="text-4xl font-semibold leading-tight sm:text-5xl">
@@ -58,18 +61,22 @@ export default function LandingPage() {
             ))}
           </CardContent>
         </Card>
+
         <Card className="border-0 bg-white/70 shadow-xl backdrop-blur">
           <CardHeader>
             <CardTitle>Streamlined workflow</CardTitle>
-            <CardDescription>Designed for quick data entry and instant recommendations.</CardDescription>
+            <CardDescription>
+              Enter your labs quickly, get answers instantly.
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3 text-left text-sm text-muted-foreground">
             <p>
-              The HemoVita lab entry flow guides you through each key marker with unit hints, validation, and inline
-              tooltips explaining clinical context.
+              Helpful prompts and tooltips walk you through every marker.
             </p>
             <Separator />
-            <p>Easily revisit past entries and keep your profile in sync with your care team.</p>
+            <p>
+              Access your previous results whenever you need them.
+            </p>
           </CardContent>
         </Card>
       </section>
