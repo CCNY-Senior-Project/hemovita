@@ -6,6 +6,7 @@ import { NavUserMenu } from "@/components/layout/user-menu";
 const links = [
   { href: "/dashboard", label: "Dashboard" },
   { href: "/labs/new", label: "New Lab Entry" },
+  { href: "/nutrient-graph", label: "Nutrient Graph" },
   { href: "/profile", label: "Profile" },
 ];
 
