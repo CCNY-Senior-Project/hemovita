@@ -6,3 +6,6 @@ prisma/dev.db-journal
 coverage
 .DS_Store
 dist
+__pycache__/
+*.pyc
+*.pyo

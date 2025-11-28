@@ -65,11 +65,12 @@ export default function LandingPage() {
         <Card className="border-0 bg-white/70 shadow-xl backdrop-blur">
           <CardHeader>
             <CardTitle>Streamlined workflow</CardTitle>
-            <CardDescription>
-              Enter your labs quickly, get answers instantly.
-            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3 text-left text-sm text-muted-foreground">
+            <p>
+              Enter your labs quickly, get answers instantly.
+            </p>
+            <Separator />
             <p>
               Helpful prompts and tooltips walk you through every marker.
             </p>

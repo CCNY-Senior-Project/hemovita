@@ -14,10 +14,27 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { api } from "@/lib/api";
-import { type RecommendationPayload } from "@/lib/recommendations";
+import { Separator } from "@/components/ui/separator";
 import { labSchema } from "@/lib/validators/labs";
 import { REF } from "@/lib/ref";
+
+// -------- types matching the FastAPI backend (schema.py) --------
+
+type FoodItem = {
+  name: string;
+  serving_g?: number | null;
+  category?: string | null;
+};
+
+type ReportResponse = {
+  labels: Record<string, string>;
+  supplement_plan: Record<string, string[]>; // e.g. { morning: ["iron", "vitamin_C"] }
+  foods: Record<string, FoodItem[]>;         // e.g. { iron: [{ name, serving_g, category }, ...] }
+  network_notes: string[];
+  report_text: string;
+};
+
+// ---------------- field definitions ----------------
 
 const fields = [
   {
@@ -26,7 +43,7 @@ const fields = [
     unit: "g/dL",
     min: 0,
     max: 25,
-    tooltip: "Primary oxygen-carrying protein; low values commonly reflect anemia."
+    tooltip: "Primary oxygen-carrying protein; low values commonly reflect anemia.",
   },
   {
     key: "MCV",
@@ -34,7 +51,7 @@ const fields = [
     unit: "fL",
     min: 40,
     max: 150,
-    tooltip: "Average size of red blood cells; helps classify anemia types."
+    tooltip: "Average size of red blood cells; helps classify anemia types.",
   },
   {
     key: "ferritin",
@@ -42,7 +59,7 @@ const fields = [
     unit: "ng/mL",
     min: 0,
     max: 500,
-    tooltip: "Reflects stored iron; low levels precede anemia."
+    tooltip: "Reflects stored iron; low levels precede anemia.",
   },
   {
     key: "indicator_iron_serum",
@@ -50,7 +67,7 @@ const fields = [
     unit: "µg/dL",
     min: 0,
     max: 400,
-    tooltip: "Circulating iron bound to transferrin."
+    tooltip: "Circulating iron bound to transferrin.",
   },
   {
     key: "transferrin",
@@ -58,7 +75,7 @@ const fields = [
     unit: "mg/dL",
     min: 0,
     max: 600,
-    tooltip: "Iron transporter protein; elevated in iron deficiency."
+    tooltip: "Iron transporter protein; elevated in iron deficiency.",
   },
   {
     key: "total_iron_binding_capacity",
@@ -66,7 +83,7 @@ const fields = [
     unit: "µg/dL",
     min: 0,
     max: 600,
-    tooltip: "Indirect measure of transferrin; rises when iron stores fall."
+    tooltip: "Indirect measure of transferrin; rises when iron stores fall.",
   },
   {
     key: "vitamin_B12",
@@ -74,7 +91,7 @@ const fields = [
     unit: "pg/mL",
     min: 0,
     max: 2000,
-    tooltip: "Essential for nerve and blood health."
+    tooltip: "Essential for nerve and blood health.",
   },
   {
     key: "folate_plasma",
@@ -82,7 +99,7 @@ const fields = [
     unit: "ng/mL",
     min: 0,
     max: 40,
-    tooltip: "Supports DNA synthesis and methylation."
+    tooltip: "Supports DNA synthesis and methylation.",
   },
   {
     key: "vitamin_D",
@@ -90,7 +107,7 @@ const fields = [
     unit: "ng/mL",
     min: 0,
     max: 150,
-    tooltip: "Impacts bone health and immune function."
+    tooltip: "Impacts bone health and immune function.",
   },
   {
     key: "magnesium",
@@ -98,7 +115,7 @@ const fields = [
     unit: "mg/dL",
     min: 0,
     max: 4,
-    tooltip: "Cofactor in hundreds of enzymatic reactions."
+    tooltip: "Cofactor in hundreds of enzymatic reactions.",
   },
   {
     key: "zinc",
@@ -106,7 +123,7 @@ const fields = [
     unit: "µg/dL",
     min: 0,
     max: 300,
-    tooltip: "Critical for immune response and wound healing."
+    tooltip: "Critical for immune response and wound healing.",
   },
   {
     key: "calcium",
@@ -114,7 +131,7 @@ const fields = [
     unit: "mg/dL",
     min: 0,
     max: 15,
-    tooltip: "Maintains bone strength and cellular signaling."
+    tooltip: "Maintains bone strength and cellular signaling.",
   },
   {
     key: "vitamin_C",
@@ -122,7 +139,7 @@ const fields = [
     unit: "mg/dL",
     min: 0,
     max: 5,
-    tooltip: "Supports collagen synthesis and antioxidant recycling."
+    tooltip: "Supports collagen synthesis and antioxidant recycling.",
   },
   {
     key: "vitamin_A",
@@ -130,7 +147,7 @@ const fields = [
     unit: "µg/dL",
     min: 0,
     max: 120,
-    tooltip: "Important for vision and epithelial integrity."
+    tooltip: "Important for vision and epithelial integrity.",
   },
   {
     key: "vitamin_E",
@@ -138,7 +155,7 @@ const fields = [
     unit: "mg/L",
     min: 0,
     max: 40,
-    tooltip: "Fat-soluble antioxidant protecting cell membranes."
+    tooltip: "Fat-soluble antioxidant protecting cell membranes.",
   },
   {
     key: "vitamin_B6",
@@ -146,7 +163,7 @@ const fields = [
     unit: "µg/L",
     min: 0,
     max: 80,
-    tooltip: "Supports amino acid metabolism and neurotransmitters."
+    tooltip: "Supports amino acid metabolism and neurotransmitters.",
   },
   {
     key: "homocysteine",
@@ -154,8 +171,8 @@ const fields = [
     unit: "µmol/L",
     min: 0,
     max: 100,
-    tooltip: "Cardiovascular risk marker; responds to B vitamins."
-  }
+    tooltip: "Cardiovascular risk marker; responds to B vitamins.",
+  },
 ] as const;
 
 const sampleValues = {
@@ -175,13 +192,14 @@ const sampleValues = {
   vitamin_A: 28,
   vitamin_E: 5.5,
   vitamin_B6: 4.9,
-  homocysteine: 18
+  homocysteine: 18,
 } satisfies Record<(typeof fields)[number]["key"], number>;
 
 type LabFormValues = z.infer<typeof labSchema>;
 
 export function LabForm() {
-  const [result, setResult] = useState<RecommendationPayload | null>(null);
+  const [result, setResult] = useState<ReportResponse | null>(null);
+  const [lastLabs, setLastLabs] = useState<LabFormValues | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -191,30 +209,62 @@ export function LabForm() {
       () =>
         fields.reduce(
           (acc, field) => {
-            acc[field.key] = undefined;
+            acc[field.key as keyof LabFormValues] = undefined as any;
             return acc;
           },
-          {} as LabFormValues
+          {} as LabFormValues,
         ),
-      []
-    )
+      [],
+    ),
   });
 
   const onSubmit = (values: LabFormValues) => {
     setError(null);
+    setResult(null);
+
+    // Build labs object with ONLY numeric values (backend expects Dict[str, float])
+    const labs: Record<string, number> = {};
+    for (const [key, value] of Object.entries(values)) {
+      if (typeof value === "number" && !Number.isNaN(value)) {
+        labs[key] = value;
+      }
+    }
+
     startTransition(async () => {
       try {
-        const payload = Object.fromEntries(
-          Object.entries(values).map(([key, value]) => [key, value === undefined ? null : value])
+        const res = await fetch("/api/report", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            labs,
+            patient: {
+              // TODO: wire these to real patient fields in your profile or form
+              age: 30,
+              sex: "female",
+              country: null,
+              notes: null,
+              pregnant: null,
+            },
+            diet_filter: null,
+          }),
+        });
+
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(text || `API returned status ${res.status}`);
+        }
+
+        const data: ReportResponse = await res.json();
+        setResult(data);
+        setLastLabs(values);
+      } catch (err: any) {
+        console.error(err);
+        setError(
+          err?.message ||
+            "Could not generate recommendations from the backend. Please check your inputs and try again.",
         );
-        const response = await api.post<RecommendationPayload>("/recommend", payload);
-        setResult(response.data);
-      } catch (err: unknown) {
-        const message =
-          (err as { response?: { data?: { error?: string } } })?.response?.data?.error ??
-          "Could not generate recommendations. Please review your inputs.";
-        setError(message);
-        setResult(null);
       }
     });
   };
@@ -222,11 +272,13 @@ export function LabForm() {
   const loadSample = () => {
     form.reset(sampleValues);
     setResult(null);
+    setLastLabs(null);
     setError(null);
   };
 
   return (
     <div className="space-y-8">
+      {/* --- input card --- */}
       <Card className="rounded-3xl border-0 bg-white/80 shadow-xl backdrop-blur">
         <CardHeader className="flex flex-wrap items-start justify-between gap-4">
           <div>
@@ -245,16 +297,17 @@ export function LabForm() {
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               ) : null}
+
               <div className="grid gap-6 md:grid-cols-2">
-                {fields.map((field) => (
+                {fields.map((fieldDef) => (
                   <FormField
-                    key={field.key}
+                    key={fieldDef.key}
                     control={form.control}
-                    name={field.key}
-                    render={({ field: inputField }) => (
+                    name={fieldDef.key as keyof LabFormValues}
+                    render={({ field }) => (
                       <FormItem>
                         <div className="flex items-center gap-2">
-                          <FormLabel className="text-sm font-semibold text-foreground">{field.label}</FormLabel>
+                          <FormLabel className="text-sm font-semibold text-foreground">{fieldDef.label}</FormLabel>
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger asChild>
@@ -266,7 +319,7 @@ export function LabForm() {
                                   <Info className="h-4 w-4" />
                                 </button>
                               </TooltipTrigger>
-                              <TooltipContent>{field.tooltip}</TooltipContent>
+                              <TooltipContent>{fieldDef.tooltip}</TooltipContent>
                             </Tooltip>
                           </TooltipProvider>
                         </div>
@@ -275,27 +328,28 @@ export function LabForm() {
                             <Input
                               type="number"
                               step="any"
-                              min={field.min}
-                              max={field.max}
-                              placeholder={`e.g. ${field.unit}`}
-                              value={inputField.value ?? ""}
+                              min={fieldDef.min}
+                              max={fieldDef.max}
+                              placeholder={`e.g. ${fieldDef.unit}`}
+                              value={field.value ?? ""}
                               onChange={(event) => {
                                 const value = event.target.value;
-                                inputField.onChange(value === "" ? undefined : Number(value));
+                                field.onChange(value === "" ? undefined : Number(value));
                               }}
                             />
-                            <span className="text-xs font-medium text-muted-foreground">{field.unit}</span>
+                            <span className="text-xs font-medium text-muted-foreground">{fieldDef.unit}</span>
                           </div>
                         </FormControl>
                         <FormMessage />
                         <p className="text-xs text-muted-foreground">
-                          Reference: {REF[field.key]?.low ?? "—"} – {REF[field.key]?.high ?? "—"}
+                          Reference: {REF[fieldDef.key]?.low ?? "—"} – {REF[fieldDef.key]?.high ?? "—"}
                         </p>
                       </FormItem>
                     )}
                   />
                 ))}
               </div>
+
               <Button type="submit" size="lg" className="rounded-full" disabled={isPending}>
                 {isPending ? "Analyzing..." : "Generate recommendations"}
               </Button>
@@ -304,19 +358,29 @@ export function LabForm() {
         </CardContent>
       </Card>
 
-      {result ? (
+      {/* --- results --- */}
+      {result && (
         <div className="grid gap-6 md:grid-cols-2">
-          <Card className="rounded-3xl border-0 bg-white/80 shadow-xl backdrop-blur md:col-span-2">
+          {/* Narrative summary */}
+          {/* <Card className="rounded-3xl border-0 bg-white/80 shadow-xl backdrop-blur md:col-span-2">
             <CardHeader>
-              <CardTitle>Summary</CardTitle>
-              <CardDescription>{result.summary}</CardDescription>
+              <CardTitle>Full report</CardTitle>
+              <CardDescription>
+                Prototype narrative generated by the HemoVita recommendation engine (backend).
+              </CardDescription>
             </CardHeader>
-          </Card>
+            <CardContent>
+              <pre className="max-h-[400px] overflow-auto whitespace-pre-wrap rounded-2xl bg-muted/60 p-4 text-sm">
+                {result.report_text}
+              </pre>
+            </CardContent>
+          </Card> */}
 
+          {/* Marker classification */}
           <Card className="rounded-3xl border-0 bg-white/80 shadow-xl backdrop-blur">
             <CardHeader>
               <CardTitle>Marker classification</CardTitle>
-              <CardDescription>Comparing your values against evidence-based ranges.</CardDescription>
+              {/* <CardDescription>Comparing your values to the backend&apos;s evidence-based ranges.</CardDescription> */}
             </CardHeader>
             <CardContent className="overflow-x-auto">
               <Table>
@@ -325,52 +389,123 @@ export function LabForm() {
                     <TableHead>Marker</TableHead>
                     <TableHead>Value</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead>Note</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {result.markers.map((marker) => (
-                    <TableRow key={marker.marker}>
-                      <TableCell className="font-medium">{marker.marker}</TableCell>
-                      <TableCell>{marker.value ?? "—"}</TableCell>
-                      <TableCell>
-                        <Badge
-                          variant={
-                            marker.status === "normal"
-                              ? "secondary"
-                              : marker.status === "unknown"
+                  {Object.entries(result.labels).map(([marker, status]) => {
+                    const value = lastLabs ? (lastLabs as any)[marker] : undefined;
+                    return (
+                      <TableRow key={marker}>
+                        <TableCell className="font-medium">{marker}</TableCell>
+                        <TableCell>{value ?? "—"}</TableCell>
+                        <TableCell>
+                          <Badge
+                            variant={
+                              status === "normal"
+                                ? "secondary"
+                                : status === "unknown"
                                 ? "outline"
                                 : "default"
-                          }
-                        >
-                          {marker.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-xs text-muted-foreground">{marker.note}</TableCell>
-                    </TableRow>
-                  ))}
+                            }
+                          >
+                            {status}
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
               </Table>
             </CardContent>
           </Card>
 
-          <Card className="rounded-3xl border-0 bg-white/80 shadow-xl backdrop-blur">
+          {/* Supplement plan */}
+          <div className="space-y-4">
+                {/* Supplement plan */}
+                <Card className="rounded-3xl border-0 bg-white/80 shadow-xl backdrop-blur">
+                  <CardHeader>
+                    <CardTitle>Supplement schedule</CardTitle>
+                    <CardDescription>Grouped into simple morning / midday / evening slots.</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {Object.entries(result.supplement_plan).map(([slot, supplements]) => (
+                      <div key={slot} className="rounded-2xl border px-4 py-3">
+                        <p className="text-sm font-semibold capitalize text-primary">{slot}</p>
+                        {supplements.length === 0 ? (
+                          <p className="text-sm text-muted-foreground">No supplements scheduled in this slot.</p>
+                        ) : (
+                          <div className="mt-1 flex flex-wrap gap-2">
+                            {supplements.map((supp) => (
+                              <Badge key={supp} variant="outline" className="capitalize">
+                                {supp.replace(/_/g, " ")}
+                              </Badge>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+
+                {/* Nutrient interaction notes – now directly under supplement schedule */}
+                <Card className="rounded-3xl border-0 bg-white/80 shadow-xl backdrop-blur">
+                  <CardHeader>
+                    <CardTitle>Nutrient interaction notes</CardTitle>
+                    {/* <CardDescription>How the engine is spacing and pairing supplements.</CardDescription> */}
+                  </CardHeader>
+                  <CardContent className="space-y-2 text-sm text-muted-foreground">
+                    {result.network_notes.map((note, idx) => (
+                      <p key={idx}>• {note}</p>
+                    ))}
+                  </CardContent>
+                </Card>
+              </div>
+
+          {/* Food suggestions */}
+          <Card className="rounded-3xl border-0 bg-white/80 shadow-xl backdrop-blur md:col-span-2">
             <CardHeader>
-              <CardTitle>Follow-up schedule</CardTitle>
-              <CardDescription>Simple next steps to discuss with your provider.</CardDescription>
+              <CardTitle>Food suggestions</CardTitle>
+              <CardDescription>Top foods per nutrient .</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              {result.schedule.map((item) => (
-                <div key={item.title} className="rounded-2xl border px-4 py-3">
-                  <p className="text-sm font-semibold text-primary">{item.timeframe}</p>
-                  <p className="text-base font-semibold text-foreground">{item.title}</p>
-                  <p className="text-sm text-muted-foreground">{item.description}</p>
+            <CardContent className="space-y-6">
+              {Object.keys(result.foods).length === 0 && (
+                <p className="text-sm text-muted-foreground">
+                  No food suggestions available for this panel. Try adding more deficient markers.
+                </p>
+              )}
+
+              {Object.entries(result.foods).map(([bundle, foods]) => (
+                <div key={bundle} className="rounded-2xl border p-4">
+                  <p className="mb-2 text-sm font-semibold capitalize">
+                    {bundle.replace(/_/g, " ")} – suggested foods
+                  </p>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Food</TableHead>
+                        <TableHead>Typical serving</TableHead>
+                        <TableHead>Category</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {foods.map((f, idx) => (
+                        <TableRow key={`${bundle}-${idx}`}>
+                          <TableCell>{f.name}</TableCell>
+                          <TableCell>{f.serving_g != null ? `${f.serving_g} g` : "—"}</TableCell>
+                          <TableCell>{f.category ?? "—"}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
                 </div>
               ))}
             </CardContent>
           </Card>
+
+          {/* Network notes */}
+
         </div>
-      ) : null}
+      )}
     </div>
   );
 }
