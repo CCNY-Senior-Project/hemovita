@@ -3,7 +3,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .schema import ReportRequest, ReportResponse, FoodItem
+from pydantic import BaseModel
+from app.engine.micronutrient_risk_model import get_micronutrient_risk_profile
+
+
+from .schema import ReportRequest, ReportResponse, FoodItem, RiskProfileInput
 from .engine import (
     PatientInfo,
     classify_panel,
@@ -24,6 +28,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.post("/api/risk-profile")
+async def micronutrient_risk_route(profile: RiskProfileInput):
+    result = get_micronutrient_risk_profile(profile.dict())
+    return result
 
 
 @app.post("/api/report", response_model=ReportResponse)
@@ -58,6 +68,36 @@ def api_report(payload: ReportRequest):
                 for (name, serv_g, cat) in lst
             ]
 
+    # 5) Micronutrient risk profile (integrated into report)
+    # Map patient info -> risk profile input
+    # Simple population heuristic; you can refine this as needed.
+    sex_lower = (patient.sex or "").lower()
+    if sex_lower == "female":
+        if patient.pregnant:
+            population = "Pregnant women"
+        else:
+            population = "Women"
+    elif sex_lower == "male":
+        population = "Men"
+    else:
+        population = "All"
+
+    risk_profile_input = {
+        "country": patient.country or "",
+        "population": population,
+        "gender": (patient.sex or "").capitalize(),
+        "age": patient.age,
+    }
+
+    risk_result = get_micronutrient_risk_profile(risk_profile_input)
+
+    micronutrient_risks = risk_result.get("micronutrient_risks", [])
+    risk_summary_text = risk_result.get("summary_text", "")
+
+
+
+
+
     network_notes = [
         "Iron is scheduled away from calcium/zinc based on the nutrient interaction network.",
         "Vitamin C / D are co-dosed with iron when possible to boost absorption.",
@@ -69,4 +109,6 @@ def api_report(payload: ReportRequest):
         foods=foods,
         network_notes=network_notes,
         report_text=report_text,
+        micronutrient_risks=micronutrient_risks,
+        risk_summary_text=risk_summary_text,
     )

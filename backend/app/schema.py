@@ -30,3 +30,12 @@ class ReportResponse(BaseModel):
     foods: Dict[str, List[FoodItem]]
     network_notes: List[str]
     report_text: str
+    micronutrient_risks: Optional[list[dict]] = None
+    risk_summary_text: Optional[str] = None
+
+
+class RiskProfileInput(BaseModel):
+    country: str
+    population: str
+    gender: str
+    age: float
