@@ -14,24 +14,24 @@ DEFAULT_DATA_FILENAME = "micronutrient_data.csv"
 
 
 def _resolve_data_path() -> Path:
-    """
-    Resolve micronutrient_data.csv.
+    ...
+    # 2) Default: backend/data/micronutrient_data.csv
+    here = Path(__file__).resolve()
+    # risk.py = backend/app/risk.py
+    backend_root = here.parents[1]              # -> backend/
+    default_path = backend_root / "data" / DEFAULT_DATA_FILENAME
 
-    Priority:
-      1) HEMOVITA_RISK_DATA env var (file or dir)
-      2) backend/data/micronutrient_data.csv
-    """
-    # 1) Environment variable override (optional)
-    env_val = os.getenv(DATA_PATH_ENV)
-    if env_val:
-        p = Path(env_val)
-        if p.is_dir():
-            p = p / DEFAULT_DATA_FILENAME
-        if p.exists():
-            print(f"[risk] using data from env: {p}")
-            return p
-        else:
-            print(f"[risk] WARNING: env path does not exist: {p}")
+    print(f"[risk] trying data path: {default_path}")
+    if default_path.exists():
+        print(f"[risk] resolved data path: {default_path}")
+        return default_path
+
+    raise FileNotFoundError(
+        f"micronutrient_data.csv not found at: {default_path}\n"
+        f"Place it at backend/data/micronutrient_data.csv "
+        f"or set {DATA_PATH_ENV}."
+    )
+
 
     # 2) Default: backend/data/micronutrient_data.csv
     here = Path(__file__).resolve()

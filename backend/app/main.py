@@ -1,13 +1,15 @@
 # backend/app/main.py
+# backend/app/main.py
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from pydantic import BaseModel
-from app.engine.risk import get_micronutrient_risk_profile
-
-
-from .schema import ReportRequest, ReportResponse, FoodItem, RiskProfileInput
+from .schema import (
+    ReportRequest,
+    ReportResponse,
+    FoodItem,
+    
+)
 from .engine import (
     PatientInfo,
     classify_panel,
@@ -17,28 +19,41 @@ from .engine import (
     generate_report,
     FOOD_CSV_DEFAULT,
 )
-
+from . import risk  # module with get_micronutrient_risk_profile
 
 app = FastAPI(title="HemoVita API", version="0.1.0")
 
+# CORS so localhost:3000 can talk to localhost:8000
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # or your frontend origin(s)
+    allow_origins=["*"],  # you can restrict later
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 
-@app.post("/api/risk-profile")
-async def micronutrient_risk_route(profile: RiskProfileInput):
-    result = get_micronutrient_risk_profile(profile.dict())
-    return result
+# -------------------------------------------------------------------
+# 1) Standalone risk endpoint (optional)
+# -------------------------------------------------------------------
+# @app.post("/api/risk-profile")
+# async def micronutrient_risk_route(profile: RiskProfileInput):
+#     """
+#     Optional endpoint: given age/sex/country/population, returns
+#     the raw risk model output.
+#     """
+#     result = risk.get_micronutrient_risk_profile(profile.dict())
+#     return result
 
 
+# -------------------------------------------------------------------
+# 2) Main report endpoint used by the frontend proxy (/api/report)
+# -------------------------------------------------------------------
 @app.post("/api/report", response_model=ReportResponse)
 def api_report(payload: ReportRequest):
-    # Build PatientInfo from incoming payload
+    # -----------------------
+    # 1) Build patient object
+    # -----------------------
     patient = PatientInfo(
         age=payload.patient.age,
         sex=payload.patient.sex,
@@ -47,18 +62,22 @@ def api_report(payload: ReportRequest):
         notes=payload.patient.notes,
     )
 
-    # 1) Full text report
+    # -----------------------
+    # 2) Generate narrative report
+    # -----------------------
     report_text = generate_report(
         payload.labs,
         patient,
         FOOD_CSV_DEFAULT,
     )
 
-    # 2) Structured extras for frontend
+    # -----------------------
+    # 3) Structured extras
+    # -----------------------
     labels = classify_panel(payload.labs)
     supp_plan = build_supplement_plan(labels)
 
-    foods = {}
+    foods: dict[str, list[FoodItem]] = {}
     if FOOD_CSV_DEFAULT.exists():
         food_df = load_food_data(FOOD_CSV_DEFAULT)
         foods_raw = suggest_foods(labels, food_df, top_n=5)
@@ -68,45 +87,73 @@ def api_report(payload: ReportRequest):
                 for (name, serv_g, cat) in lst
             ]
 
-    # 4) Micronutrient risk profile (integrated into report)
-    sex_lower = (patient.sex or "").lower()
-    if sex_lower == "female":
-        if patient.pregnant:
-            population = "Pregnant women"
-        else:
-            population = "Women"
-    elif sex_lower == "male":
-        population = "Men"
-    else:
-        population = "All"
-
-    risk_profile_input = {
-        "country": patient.country or "",
-        "population": population,
-        "gender": (patient.sex or "").capitalize(),
-        "age": patient.age,
-    }
-
-    risk_result = get_micronutrient_risk_profile(risk_profile_input)
-
-    micronutrient_risks = risk_result.get("micronutrient_risks", [])
-    risk_summary_text = risk_result.get("summary_text", "")
-
-
-
-
-
     network_notes = [
         "Iron is scheduled away from calcium/zinc based on the nutrient interaction network.",
         "Vitamin C / D are co-dosed with iron when possible to boost absorption.",
     ]
 
+    # -----------------------
+    # 4) Risk profile
+    # -----------------------
+    risk_profile = None
+    try:
+        sex_lower = (patient.sex or "").lower()
+        if sex_lower == "female":
+            population = "Pregnant women" if patient.pregnant else "Women"
+            gender = "Female"
+        elif sex_lower == "male":
+            population = "Men"
+            gender = "Male"
+        else:
+            population = "All"
+            gender = "All"
+
+        rp_input = {
+            "country": patient.country or "",
+            "population": population,
+            "gender": gender,
+            "age": patient.age,
+        }
+
+        raw = risk.get_micronutrient_risk_profile(rp_input)
+        micronutrient_risks = raw.get("micronutrient_risks", [])
+        meta = raw.get("meta", {})
+        summary_text = raw.get("summary_text", "")
+
+        if micronutrient_risks:
+            overall_risk = max(m["predicted_risk"] for m in micronutrient_risks)
+        else:
+            overall_risk = 0.0
+
+        if overall_risk < 0.33:
+            bucket = "low"
+        elif overall_risk < 0.66:
+            bucket = "moderate"
+        else:
+            bucket = "high"
+
+        high_risk = [m for m in micronutrient_risks if m["predicted_risk"] >= 0.66]
+
+        risk_profile = {
+            "overall_risk": overall_risk,
+            "risk_bucket": bucket,
+            "high_risk_micronutrients": high_risk,
+            "micronutrient_risks": micronutrient_risks,
+            "summary_text": summary_text,
+            "meta": meta,
+        }
+    except Exception as e:
+        print("Risk model failed:", e)
+        risk_profile = None
+
+    # -----------------------
+    # 5) Final response
+    # -----------------------
     return ReportResponse(
         labels=labels,
-        supplement_plan=supp_plan,
+        supplement_plan=supp_plan,  # ✅ use the real variable name
         foods=foods,
         network_notes=network_notes,
         report_text=report_text,
-        micronutrient_risks=micronutrient_risks,
-        risk_summary_text=risk_summary_text,
+        risk_profile=risk_profile,
     )

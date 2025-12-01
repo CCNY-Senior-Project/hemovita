@@ -1,82 +1,97 @@
-// frontend/app/api/report/route.ts
 import { NextResponse } from "next/server";
 
-import { prisma } from "@/lib/prisma";
 import { getServerAuthSession } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 
 const REC_ENGINE_URL =
   process.env.REC_ENGINE_URL ?? "http://127.0.0.1:8000";
 
+/**
+ * Proxy labs -> FastAPI /api/report and save labs to Prisma.
+ */
 export async function POST(req: Request) {
+  // 1) Auth check
+  const session = await getServerAuthSession();
+  if (!session?.user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  // 2) Parse body
+  let body: any;
   try {
-    const session = await getServerAuthSession();
+    body = await req.json();
+  } catch {
+    return NextResponse.json(
+      { error: "Invalid JSON body" },
+      { status: 400 },
+    );
+  }
 
-    const body = await req.json();
-    const { labs, patient, diet_filter } = body ?? {};
+  const { labs, patient, diet_filter } = body ?? {};
 
-    if (!labs || typeof labs !== "object") {
-      return NextResponse.json(
-        { error: "Missing labs payload" },
-        { status: 400 }
-      );
-    }
+  if (!labs || typeof labs !== "object") {
+    return NextResponse.json(
+      { error: "Missing labs payload" },
+      { status: 400 },
+    );
+  }
 
-    // ---- 1) Call FastAPI backend ----
+  try {
+    // 3) Call FastAPI backend (NOTE: /api/report, not /report)
     const backendRes = await fetch(`${REC_ENGINE_URL}/api/report`, {
-      // 👆 IMPORTANT: /api/report (not /report)
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         labs,
-        patient,
+        patient: patient ?? null,
         diet_filter: diet_filter ?? null,
       }),
     });
 
+    const backendText = await backendRes.text();
+
     if (!backendRes.ok) {
-      const text = await backendRes.text();
-      return new NextResponse(
-        text || `Backend error (status ${backendRes.status})`,
-        { status: backendRes.status }
+      console.error(
+        "Backend /api/report error",
+        backendRes.status,
+        backendText,
+      );
+      return NextResponse.json(
+        {
+          error: "Backend report service failed",
+          details: backendText,
+        },
+        { status: 502 },
       );
     }
 
-    const reportJson = await backendRes.json();
+    const report = JSON.parse(backendText);
 
-    // ---- 2) Save lab entry for logged-in user ----
-    if (session?.user?.id) {
-      await prisma.labEntry.create({
-        data: {
-          userId: session.user.id,
-
-          // match schema.prisma fields
-          Hemoglobin: labs.Hemoglobin ?? null,
-          MCV: labs.MCV ?? null,
-          ferritin: labs.ferritin ?? null,
-          vitamin_B12: labs.vitamin_B12 ?? null,
-          folate_plasma: labs.folate_plasma ?? null,
-          vitamin_D: labs.vitamin_D ?? null,
-          magnesium: labs.magnesium ?? null,
-          zinc: labs.zinc ?? null,
-          calcium: labs.calcium ?? null,
-          vitamin_C: labs.vitamin_C ?? null,
-          vitamin_A: labs.vitamin_A ?? null,
-          vitamin_E: labs.vitamin_E ?? null,
-          vitamin_B6: labs.vitamin_B6 ?? null,
-          homocysteine: labs.homocysteine ?? null,
-        },
-      });
+    // 4) Save labs to Prisma as a LabEntry
+    //    Only numeric lab fields will be persisted
+    const labData: Record<string, number> = {};
+    for (const [key, value] of Object.entries(labs)) {
+      if (typeof value === "number" && !Number.isNaN(value)) {
+        labData[key] = value;
+      }
     }
 
-    // ---- 3) Return backend response to the client ----
-    return NextResponse.json(reportJson);
+    await prisma.labEntry.create({
+      data: {
+        userId: session.user.id,
+        ...labData,
+      },
+    });
+
+    // 5) Return whatever the backend sent
+    return NextResponse.json(report, { status: 200 });
   } catch (err) {
-    console.error("Error in /api/report:", err);
+    console.error("Error calling backend report service", err);
     return NextResponse.json(
-      { error: "Failed to generate report" },
-      { status: 500 }
+      { error: "Internal error talking to report service" },
+      { status: 500 },
     );
   }
 }

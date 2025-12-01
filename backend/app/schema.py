@@ -2,7 +2,7 @@
 
 from typing import Dict, List, Optional
 from pydantic import BaseModel, Field
-
+from typing_extensions import Literal
 
 class PatientPayload(BaseModel):
     age: int
@@ -24,6 +24,33 @@ class FoodItem(BaseModel):
     category: Optional[str] = None
 
 
+
+class RiskProfileInput(BaseModel):
+    country: str
+    population: str
+    gender: str
+    age: float
+
+class RiskMicronutrient(BaseModel):
+    micronutrient: str
+    predicted_risk: float
+
+
+class RiskMeta(BaseModel):
+    country: Optional[str] = None
+    population: Optional[str] = None
+    gender: Optional[str] = None
+    age: Optional[int] = None
+
+
+class RiskProfile(BaseModel):
+    overall_risk: float
+    risk_bucket: Literal["low", "moderate", "high"]
+    high_risk_micronutrients: List[RiskMicronutrient]
+    micronutrient_risks: List[RiskMicronutrient]
+    summary_text: str
+    meta: RiskMeta
+
 class ReportResponse(BaseModel):
     labels: Dict[str, str]
     supplement_plan: Dict[str, List[str]]
@@ -32,10 +59,4 @@ class ReportResponse(BaseModel):
     report_text: str
     micronutrient_risks: Optional[list[dict]] = None
     risk_summary_text: Optional[str] = None
-
-
-class RiskProfileInput(BaseModel):
-    country: str
-    population: str
-    gender: str
-    age: float
+    risk_profile: Optional[RiskProfile] = None

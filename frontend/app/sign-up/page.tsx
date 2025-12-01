@@ -14,7 +14,7 @@ export default function SignUpPage() {
       <Card className="rounded-3xl border-0 bg-white/70 shadow-xl backdrop-blur">
         <CardHeader className="space-y-3 text-center">
           <CardTitle className="text-3xl font-semibold">Create your HemoVita account</CardTitle>
-          <CardDescription>Securely track hematology and micronutrient labs.</CardDescription>
+          {/* <CardDescription>Securely track hematology and micronutrient labs.</CardDescription> */}
         </CardHeader>
         <CardContent>
           <SignUpForm />
