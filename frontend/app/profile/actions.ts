@@ -1,36 +1,31 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-import { z } from "zod";
-
+import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { getServerAuthSession } from "@/lib/auth";
+import { getServerSession } from "next-auth";
 
-const profileSchema = z.object({
-  name: z.string().min(2, "Name is required"),
-  email: z.string().email("Provide a valid email address")
-});
+export async function updateProfileAction(values: any) {
+  const session = await getServerSession(authOptions);
 
-export async function updateProfileAction(values: z.infer<typeof profileSchema>) {
-  const session = await getServerAuthSession();
   if (!session?.user) {
-    throw new Error("Unauthorized");
+    return { error: "Not authenticated." };
   }
 
-  const parsed = profileSchema.safeParse(values);
-  if (!parsed.success) {
-    throw parsed.error;
+  try {
+    await prisma.user.update({
+      where: { id: session.user.id },
+      data: {
+        name: values.name,
+        age: values.age ?? null,
+        sex: values.sex ?? null,
+        country: values.country ?? null,
+        pregnant: values.pregnant ?? null,
+      },
+    });
+
+    return { success: true };
+  } catch (err) {
+    console.error("PROFILE UPDATE ERROR:", err);
+    return { error: "Could not update profile. Try again." };
   }
-
-  await prisma.user.update({
-    where: { id: session.user.id },
-    data: {
-      name: parsed.data.name,
-      email: parsed.data.email
-    }
-  });
-
-  revalidatePath("/profile");
-
-  return { success: true };
 }

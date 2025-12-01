@@ -1,148 +1,184 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useTransition, useState } from "react";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Separator } from "@/components/ui/separator";
 import { updateProfileAction } from "@/app/profile/actions";
 
-const profileFormSchema = z.object({
-  name: z.string().min(2, "Name is required"),
-  email: z.string().email("Valid email required"),
-  age: z.union([z.string(), z.number(), z.null(), z.undefined()]).transform((value) => {
-    if (value == null || value === "") return "";
-    const number = Number(value);
-    return Number.isFinite(number) ? String(number) : "";
-  }),
-  sex: z.string().optional(),
-  unitPreference: z.string().optional()
+const schema = z.object({
+  name: z.string().min(1),
+  age: z.number().int().min(0).max(120).nullable().optional(),
+  sex: z.enum(["male", "female"]).nullable().optional(),
+  country: z.string().max(100).nullable().optional(),
+  pregnant: z.boolean().nullable().optional(),
 });
 
-type ProfileFormValues = z.infer<typeof profileFormSchema>;
-
-type ProfileFormProps = {
-  defaultValues: ProfileFormValues;
-};
-
-export function ProfileForm({ defaultValues }: ProfileFormProps) {
-  const [success, setSuccess] = useState<string | null>(null);
+export function ProfileForm({ user }: { user: any }) {
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm<ProfileFormValues>({
-    resolver: zodResolver(profileFormSchema),
-    defaultValues
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      name: user.name ?? "",
+      age: user.age ?? null,
+      sex: (user.sex as "female" | "male" | null) ?? null,
+      country: user.country ?? "",
+      pregnant: user.pregnant ?? null,
+    },
   });
 
-  const onSubmit = (values: ProfileFormValues) => {
-    setSuccess(null);
+  const sex = form.watch("sex");
+
+  function onSubmit(values: z.infer<typeof schema>) {
     setError(null);
+    setSuccess(false);
+
     startTransition(async () => {
-      try {
-        await updateProfileAction({ name: values.name, email: values.email });
-        setSuccess("Profile updated successfully.");
-      } catch (err) {
-        setError("Unable to update profile. Please try again.");
+      const result = await updateProfileAction(values);
+
+      if (result?.error) {
+        setError(result.error);
+      } else {
+        setSuccess(true);
       }
     });
-  };
+  }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        {success ? (
-          <Alert variant="success">
-            <AlertDescription>{success}</AlertDescription>
-          </Alert>
-        ) : null}
-        {error ? (
+        {error && (
           <Alert variant="destructive">
             <AlertDescription>{error}</AlertDescription>
           </Alert>
-        ) : null}
+        )}
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Full name</FormLabel>
-                <FormControl>
-                  <Input placeholder="Jane Doe" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input type="email" placeholder="jane@hemovita.com" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="age"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Age (optional)</FormLabel>
-                <FormControl>
-                  <Input type="number" min={0} max={120} placeholder="32" {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="sex"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Sex (optional)</FormLabel>
-                <FormControl>
-                  <Input placeholder="Female" {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-        </div>
+        {success && (
+          <Alert>
+            <AlertDescription>Profile updated successfully.</AlertDescription>
+          </Alert>
+        )}
 
+        {/* name */}
         <FormField
           control={form.control}
-          name="unitPreference"
+          name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Preferred units</FormLabel>
+              <FormLabel>Name</FormLabel>
+              <FormControl><Input {...field} /></FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* age */}
+        <FormField
+          control={form.control}
+          name="age"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Age</FormLabel>
               <FormControl>
-                <Input placeholder="Metric" {...field} />
+                <Input
+                  type="number"
+                  value={field.value ?? ""}
+                  onChange={(e) =>
+                    field.onChange(e.target.value === "" ? null : Number(e.target.value))
+                  }
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* sex */}
+        <FormField
+          control={form.control}
+          name="sex"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Sex</FormLabel>
+              <FormControl>
+                <select
+                  className="border rounded-md p-2"
+                  value={field.value ?? ""}
+                  onChange={(e) =>
+                    field.onChange(e.target.value === "" ? null : e.target.value)
+                  }
+                >
+                  <option value="">Select</option>
+                  <option value="female">Female</option>
+                  <option value="male">Male</option>
+                </select>
               </FormControl>
             </FormItem>
           )}
         />
 
-        <Separator />
+        {/* pregnant */}
+        <FormField
+          control={form.control}
+          name="pregnant"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Pregnant</FormLabel>
+              <FormControl>
+                <select
+                  className="border rounded-md p-2"
+                  disabled={sex !== "female"}
+                  value={
+                    field.value === null || field.value === undefined
+                      ? ""
+                      : field.value
+                        ? "yes"
+                        : "no"
+                  }
+                  onChange={(e) => {
+                    if (e.target.value === "") return field.onChange(null);
+                    field.onChange(e.target.value === "yes");
+                  }}
+                >
+                  <option value="">Select</option>
+                  <option value="yes" disabled={sex !== "female"}>
+                    Yes
+                  </option>
+                  <option value="no">No</option>
+                </select>
+              </FormControl>
+              {sex !== "female" && (
+                <p className="text-xs text-muted-foreground">
+                  Pregnancy is only applicable to female users.
+                </p>
+              )}
+            </FormItem>
+          )}
+        />
 
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <Button type="submit" disabled={isPending}>
-            {isPending ? "Saving..." : "Save changes"}
-          </Button>
-          <Button type="button" variant="ghost" className="text-destructive hover:text-destructive" disabled>
-            Delete account (coming soon)
-          </Button>
-        </div>
+        {/* country */}
+        <FormField
+          control={form.control}
+          name="country"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Country</FormLabel>
+              <FormControl><Input {...field} /></FormControl>
+            </FormItem>
+          )}
+        />
+
+        <Button disabled={isPending} type="submit">
+          {isPending ? "Saving…" : "Save changes"}
+        </Button>
       </form>
     </Form>
   );

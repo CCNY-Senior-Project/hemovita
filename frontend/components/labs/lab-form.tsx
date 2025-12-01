@@ -61,30 +61,30 @@ const fields = [
     max: 500,
     tooltip: "Reflects stored iron; low levels precede anemia.",
   },
-  {
-    key: "indicator_iron_serum",
-    label: "Serum iron",
-    unit: "µg/dL",
-    min: 0,
-    max: 400,
-    tooltip: "Circulating iron bound to transferrin.",
-  },
-  {
-    key: "transferrin",
-    label: "Transferrin",
-    unit: "mg/dL",
-    min: 0,
-    max: 600,
-    tooltip: "Iron transporter protein; elevated in iron deficiency.",
-  },
-  {
-    key: "total_iron_binding_capacity",
-    label: "Total iron binding capacity",
-    unit: "µg/dL",
-    min: 0,
-    max: 600,
-    tooltip: "Indirect measure of transferrin; rises when iron stores fall.",
-  },
+  // {
+  //   key: "indicator_iron_serum",
+  //   label: "Serum iron",
+  //   unit: "µg/dL",
+  //   min: 0,
+  //   max: 400,
+  //   tooltip: "Circulating iron bound to transferrin.",
+  // },
+  // {
+  //   key: "transferrin",
+  //   label: "Transferrin",
+  //   unit: "mg/dL",
+  //   min: 0,
+  //   max: 600,
+  //   tooltip: "Iron transporter protein; elevated in iron deficiency.",
+  // },
+  // {
+  //   key: "total_iron_binding_capacity",
+  //   label: "Total iron binding capacity",
+  //   unit: "µg/dL",
+  //   min: 0,
+  //   max: 600,
+  //   tooltip: "Indirect measure of transferrin; rises when iron stores fall.",
+  // },
   {
     key: "vitamin_B12",
     label: "Vitamin B12",
@@ -175,27 +175,54 @@ const fields = [
   },
 ] as const;
 
-const sampleValues = {
-  Hemoglobin: 11.4,
-  MCV: 78,
-  ferritin: 12,
-  indicator_iron_serum: 45,
-  transferrin: 380,
-  total_iron_binding_capacity: 430,
-  vitamin_B12: 230,
-  folate_plasma: 3.2,
-  vitamin_D: 18,
-  magnesium: 1.6,
-  zinc: 58,
-  calcium: 8.8,
-  vitamin_C: 0.5,
-  vitamin_A: 28,
-  vitamin_E: 5.5,
-  vitamin_B6: 4.9,
-  homocysteine: 18,
-} satisfies Record<(typeof fields)[number]["key"], number>;
+// const sampleValues = {
+//   Hemoglobin: 11.4,
+//   MCV: 78,
+//   ferritin: 12,
+//   // indicator_iron_serum: 45,
+//   // transferrin: 380,
+//   // total_iron_binding_capacity: 430,
+//   vitamin_B12: 230,
+//   folate_plasma: 3.2,
+//   vitamin_D: 18,
+//   magnesium: 1.6,
+//   zinc: 58,
+//   calcium: 8.8,
+//   vitamin_C: 0.5,
+//   vitamin_A: 28,
+//   vitamin_E: 5.5,
+//   vitamin_B6: 4.9,
+//   homocysteine: 18,
+// } satisfies Record<(typeof fields)[number]["key"], number>;
 
 type LabFormValues = z.infer<typeof labSchema>;
+
+
+
+function randomInRange(min: number, max: number) {
+  return min + Math.random() * (max - min);
+}
+
+function generateRandomSample(): LabFormValues {
+  const values: any = {};
+
+  for (const field of fields) {
+    const ref = REF[field.key];
+    const low = ref?.low ?? field.min;
+    const high = ref?.high ?? field.max;
+
+    if (low == null || high == null || low >= high) {
+      // Fallback to mid of min/max if ref is weird/missing
+      values[field.key] = (field.min + field.max) / 2;
+    } else {
+      // Random within reference range (slightly jittered)
+      values[field.key] = Number(randomInRange(low, high).toFixed(2));
+    }
+  }
+
+  return values as LabFormValues;
+}
+
 
 export function LabForm() {
   const [result, setResult] = useState<ReportResponse | null>(null);
@@ -269,12 +296,21 @@ export function LabForm() {
     });
   };
 
+  // const loadSample = () => {
+  //   form.reset(sampleValues);
+  //   setResult(null);
+  //   setLastLabs(null);
+  //   setError(null);
+  // };
+
   const loadSample = () => {
-    form.reset(sampleValues);
-    setResult(null);
-    setLastLabs(null);
-    setError(null);
-  };
+  const randomValues = generateRandomSample();
+  form.reset(randomValues);
+  setResult(null);
+  setLastLabs(null);
+  setError(null);
+};
+
 
   return (
     <div className="space-y-8">
