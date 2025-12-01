@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from pydantic import BaseModel
-from app.engine.micronutrient_risk_model import get_micronutrient_risk_profile
+from app.engine.risk import get_micronutrient_risk_profile
 
 
 from .schema import ReportRequest, ReportResponse, FoodItem, RiskProfileInput
@@ -68,9 +68,7 @@ def api_report(payload: ReportRequest):
                 for (name, serv_g, cat) in lst
             ]
 
-    # 5) Micronutrient risk profile (integrated into report)
-    # Map patient info -> risk profile input
-    # Simple population heuristic; you can refine this as needed.
+    # 4) Micronutrient risk profile (integrated into report)
     sex_lower = (patient.sex or "").lower()
     if sex_lower == "female":
         if patient.pregnant:
