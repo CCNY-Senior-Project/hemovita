@@ -1,6 +1,6 @@
-# 🩸 HemoVita – AI-Driven Blood Screening System  
-**Empowering Personalized Healthcare Through AI**
+# HemoVita – AI-driven Micronutrient Guidance
 
+HemoVita turns lab results into clear deficiency flags and follow-up suggestions. It pairs a Next.js app for data entry and visualization with a small Python toolkit for exploring nutrient interaction graphs.
 ---
 
 ## 💡 Why HemoVita?  
@@ -24,6 +24,12 @@ Develops ML models for nutrient deficiency classification and interpretability.
 Curates datasets, establishes clinical thresholds, and supports validation.
 
 ---
+## What’s inside
+- Lab intake & validation: guided form with unit hints and Zod validation for iron, B12, vitamin D, and other key markers.
+- Rule-based recommendations: `/api/recommend` classifies each marker against reference ranges and returns a prioritized follow-up schedule.
+- Nutrient interaction network: `/api/network/graph` builds a force-directed graph from `cleaned_data/network_relationships.csv` and `Hemovita_Micronutrients.xlsx`; rendered in the 3D graph view.
+- Auth + storage: credential-based NextAuth with Prisma + SQLite; password hashing via bcrypt.
+- Python utilities: reusable loader for the nutrient graph (`network/hemovita_network_loader.py`) and a demo query script.
 
 ## 🔬 Scientific Foundation  
 Deficiencies are detected using a hybrid method:  
@@ -37,6 +43,15 @@ Deficiencies are detected using a hybrid method:
   - Triggered for overlapping or borderline cases using tabular lab data and XGBoost.
 
 ---
+## Repository layout
+- `frontend/` – Next.js 14 app (App Router), UI components, API routes, Prisma schema.
+- `cleaned_data/` – micronutrient reference workbook and edge list CSV used by the graph API.
+- `network/` – Python graph loader, demo script, and saved XGBoost JSON.
+- `code/` – notebooks (EDA, feature engineering, reproduction), model/method notes, deployment stubs.
+- `documentation/` – project write-ups (methods, data sources, references).
+- `data_visuals/` – network visuals and notebooks.
+- `references/` – paper summaries and source texts.
+
 
 ## 🔄 System Pipeline  
 
@@ -70,17 +85,24 @@ Deficiencies are detected using a hybrid method:
 
 ## 🛠️ Tech Stack  
 
-### Backend  
-- **Python (FastAPI)** – Web API and logic  
-- **XGBoost** – ML classification  
-- **SHAP** – Interpretability  
-- **AutoGluon** – Model benchmarking  
-- **Optuna** – Hyperparameter tuning  
+## Backend (Python + data assets)
+- Graph loader: `network/hemovita_network_loader.py` validates `cleaned_data/network_relationships.csv` against `Hemovita_Micronutrients.xlsx`, builds a directed graph with attributes (effect, confidence, notes), and offers path queries.
+- Demo script: `network/demo_load_and_query.py` is a quick sanity check—loads the graph, prints a summary, and runs sample path queries (requires `pandas` and `networkx`).
+- Model artifacts: `network/hemovita_xgb.json` (saved XGBoost) and evaluation notebooks in `code/` support future API integration.
+- Data files: `cleaned_data/` holds the authoritative CSV/XLSX; `data_visuals/network/*.json|csv` contains derived interaction files for plotting.
+- Future API stub: `code/deployment/fastapi_server.py` is currently empty; intended for a FastAPI service that would expose model inference and network queries.
 
 ### Frontend  
 - **Next.js** – Web framework  
 - **Tailwind CSS** – Styling  
-- **Axios** – API calls  
+- **Axios** – API calls
+## Frontend setup (Next.js)
+1) `cd frontend`
+2) Copy env: `cp .env.example .env` and set `NEXTAUTH_SECRET`; adjust `NEXTAUTH_URL` if not `http://localhost:3000`.
+3) Install: `npm install`
+4) Prisma client + schema: `npm run prisma:generate && npm run prisma:push` (uses SQLite at `DATABASE_URL`).
+5) Dev server: `npm run dev` (defaults to `http://localhost:3000`).
 
 ### Database  
 - **SQLite** (initial) → **PostgreSQL** (scalable)
+
