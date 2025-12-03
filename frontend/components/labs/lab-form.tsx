@@ -73,7 +73,45 @@ type ReportResponse = {
   risk_profile?: RiskProfile;
 };
 
+const SUPPORTED_COUNTRIES = [
+  "Bangladesh",
+  "Brazil",
+  "Burkina Faso",
+  "Cambodia",
+  "China",
+  "Cuba",
+  "Ethiopia",
+  "France",
+  "Gambia",
+  "Ghana",
+  "Guatemala",
+  "Iran",
+  "Ireland",
+  "Kenya",
+  "Korea",
+  "Lao",
+  "Malawi",
+  "Mexico",
+  "Mongolia",
+  "Nepal",
+  "New Zealand",
+  "Nigeria",
+  "Pakistan",
+  "Palestine",
+  "Peru",
+  "Tanzania",
+  "United States of America",
+] as const;
 
+const POPULATION_OPTIONS = [
+  "Children",
+  "Adolescents",
+  "Adults",
+  "Elderly",
+  "Men",
+  "Women",
+  "Pregnant women",
+] as const;
 // ---------------- field definitions ----------------
 
 const fields = [
@@ -272,8 +310,10 @@ export function LabForm() {
  // NEW: demographic fields for risk + patient payload
   const [age, setAge] = useState<string>("25");
   const [sex, setSex] = useState<"female" | "male">("female");
-  const [country, setCountry] = useState<string>("USA");
+  const [country, setCountry] = useState<string>("United States of America");
   const [pregnant, setPregnant] = useState<"yes" | "no" | "na">("na");
+  const [population, setPopulation] = useState<string>("Women"); // default matches female / not pregnant
+
 
    const form = useForm<LabFormValues>({
     resolver: zodResolver(labSchema),
@@ -312,8 +352,10 @@ export function LabForm() {
       sex, // "female" | "male"
       country: country.trim() || null,
       notes: null,
-      pregnant: pregnant === "na" ? null : pregnant === "yes"
+      pregnant: pregnant === "na" ? null : pregnant === "yes",
+      population: population || null,
     };
+
 
 
 
@@ -750,13 +792,41 @@ return (
                   {/* Country */}
                   <div className="space-y-2">
                     <FormLabel className="text-sm font-semibold">Country</FormLabel>
-                    <Input
-                      type="text"
+                    <select
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                       value={country}
                       onChange={(e) => setCountry(e.target.value)}
-                      placeholder="e.g. USA"
-                    />
+                    >
+                      <option value="">Select country</option>
+                      {SUPPORTED_COUNTRIES.map((c) => (
+                        <option key={c} value={c}>
+                          {c}
+                        </option>
+                      ))}
+                      {/* If user’s country isn’t listed, we send "Other" and the risk model will fall back */}
+                      <option value="Other">Other / Not listed</option>
+                    </select>
                   </div>
+
+                                    {/* Population group */}
+                  <div className="space-y-2">
+                    <FormLabel className="text-sm font-semibold">Population group</FormLabel>
+                    <select
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                      value={population}
+                      onChange={(e) => setPopulation(e.target.value)}
+                    >
+                      {POPULATION_OPTIONS.map((p) => (
+                        <option key={p} value={p}>
+                          {p}
+                        </option>
+                      ))}
+                    </select>
+                    <p className="text-xs text-muted-foreground">
+                      Used by the risk model (e.g. Women, Men, Children, Adolescents).
+                    </p>
+                  </div>
+
 
                   {/* Pregnancy – only when sex is female */}
                   {sex === "female" && (

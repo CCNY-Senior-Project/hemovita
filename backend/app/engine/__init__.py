@@ -6,4 +6,6 @@ from .core import (
     suggest_foods,
     generate_report,
     FOOD_CSV_DEFAULT,
-)
+    build_network_notes_for_plan
+) 
+
