@@ -23,6 +23,13 @@ interface NutrientLink {
   strength?: number; // 0..1
 }
 
+type RecommendationSnapshot = {
+  deficiencies?: string[];
+  highRisk?: string[];
+  networkNotes?: string[];
+  createdAt?: number;
+};
+
 // Fetch graph data from API (backed by cleaned_data/network_relationships.csv)
 async function fetchGraph(): Promise<{ nodes: NutrientNode[]; links: NutrientLink[] }> {
   const res = await fetch("/api/network/graph", { cache: "no-store" });
@@ -45,6 +52,10 @@ const LINK_COLORS: Record<RelationType, string> = {
   shared: "#6b7280", // gray-500
 };
 
+function normalizeId(value: string) {
+  return value.toLowerCase().replace(/\s+/g, "_");
+}
+
 export default function NutrientGraph3D() {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const fgRef = useRef<any>(null);
@@ -58,6 +69,11 @@ export default function NutrientGraph3D() {
     cofactor: true,
     shared: true,
   });
+  const [deficiencyNames, setDeficiencyNames] = useState<string[]>([]);
+  const [highRiskNames, setHighRiskNames] = useState<string[]>([]);
+  const [networkNotes, setNetworkNotes] = useState<string[]>([]);
+  const [snapshotTime, setSnapshotTime] = useState<number | null>(null);
+  const [highlightedIds, setHighlightedIds] = useState<Set<string>>(new Set());
 
   const [threeLib, setThreeLib] = useState<any>(null);
   const [fgFactory, setFgFactory] = useState<((opts?: any) => (el: HTMLElement) => any) | null>(null);
@@ -85,11 +101,50 @@ export default function NutrientGraph3D() {
     };
   }, []);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const raw = localStorage.getItem("hemovita:lastRecommendation");
+    if (!raw) return;
+    try {
+      const parsed: RecommendationSnapshot = JSON.parse(raw);
+      setDeficiencyNames(parsed.deficiencies ?? []);
+      setHighRiskNames(parsed.highRisk ?? []);
+      setNetworkNotes(parsed.networkNotes ?? []);
+      setSnapshotTime(parsed.createdAt ?? null);
+    } catch (err) {
+      console.error("Failed to parse saved recommendation snapshot", err);
+    }
+  }, []);
+
   const filtered = useMemo(() => {
     const activeLinks = links.filter((l) => showRel[l.relation as RelationType]);
     // Keep all nodes to preserve layout; alternatively filter isolated nodes here
     return { nodes, links: activeLinks };
   }, [links, nodes, showRel]);
+
+  const flagged = useMemo(
+    () => Array.from(new Set([...deficiencyNames, ...highRiskNames])),
+    [deficiencyNames, highRiskNames],
+  );
+
+  useEffect(() => {
+    if (!nodes.length) {
+      setHighlightedIds(new Set());
+      return;
+    }
+    const targets = new Set<string>();
+    [...deficiencyNames, ...highRiskNames].forEach((name) => {
+      targets.add(normalizeId(name));
+    });
+    const matched = new Set<string>();
+    nodes.forEach((n) => {
+      const idNorm = normalizeId(n.id);
+      if (targets.has(idNorm) || targets.has(normalizeId(n.label))) {
+        matched.add(n.id);
+      }
+    });
+    setHighlightedIds(matched);
+  }, [deficiencyNames, highRiskNames, nodes]);
 
   useEffect(() => {
     let cancelled = false;
@@ -116,6 +171,11 @@ export default function NutrientGraph3D() {
     if (!fgFactory || !threeLib) return;
     if (!containerRef.current) return;
 
+    const nodeValue = (n: NutrientNode) => {
+      const base = 5 + 12 * (n[sizeMetric] ?? 0.5);
+      return highlightedIds.has(n.id) ? base + 6 : base;
+    };
+
     const setSizeFromContainer = () => {
       if (!containerRef.current || !fgRef.current) return;
       fgRef.current.width(containerRef.current.clientWidth);
@@ -126,7 +186,7 @@ export default function NutrientGraph3D() {
       fgRef.current = fgFactory()(containerRef.current)
         .nodeId("id")
         .nodeLabel((n: NutrientNode) => `${n.label} (${n.type})`)
-        .nodeVal((n: NutrientNode) => 5 + 12 * (n[sizeMetric] ?? 0.5))
+        .nodeVal(nodeValue)
         .linkColor((l: NutrientLink) => LINK_COLORS[(l as any).relation as RelationType] || "#6b7280")
         .linkOpacity(0.7)
         .linkWidth(0.6)
@@ -159,14 +219,14 @@ export default function NutrientGraph3D() {
 
     setSizeFromContainer();
     fgRef.current?.nodeThreeObject((n: NutrientNode) =>
-      buildLabeledNode(n, sizeMetric, threeLib)
+      buildLabeledNode(n, sizeMetric, threeLib, highlightedIds.has(n.id))
     );
     // Update size metric on change
-    fgRef.current?.nodeVal((n: NutrientNode) => 5 + 12 * (n[sizeMetric] ?? 0.5));
+    fgRef.current?.nodeVal(nodeValue);
     fgRef.current?.graphData(filtered);
     window.addEventListener("resize", setSizeFromContainer);
     return () => window.removeEventListener("resize", setSizeFromContainer);
-  }, [filtered, sizeMetric, fgFactory, nodes, threeLib]);
+  }, [filtered, highlightedIds, sizeMetric, fgFactory, nodes, threeLib]);
 
   return (
     <div className="w-full h-full flex flex-col gap-4">
@@ -191,6 +251,31 @@ export default function NutrientGraph3D() {
         <RelFilters value={showRel} onChange={setShowRel} />
       </div>
 
+      <div className="rounded-md border bg-amber-50/70 p-3 text-sm space-y-2">
+        <div className="font-semibold">Deficiencies from your last recommendation</div>
+        {flagged.length > 0 ? (
+          <div className="flex flex-wrap gap-2">
+            {flagged.map((name) => (
+              <span
+                key={name}
+                className="rounded-full border border-red-200 bg-red-50 px-3 py-1 text-xs font-semibold capitalize text-red-700"
+              >
+                {name.replace(/_/g, " ")}
+              </span>
+            ))}
+          </div>
+        ) : (
+          <p className="text-slate-600">
+            Run a recommendation to highlight flagged nutrients here and in the graph.
+          </p>
+        )}
+        {snapshotTime ? (
+          <p className="text-xs text-slate-500">
+            Saved {new Date(snapshotTime).toLocaleString()}
+          </p>
+        ) : null}
+      </div>
+
       <div
         ref={containerRef}
         className="rounded-md border bg-white/40 dark:bg-slate-900/10"
@@ -203,6 +288,24 @@ export default function NutrientGraph3D() {
       {error && (
         <div className="text-sm text-red-600">{error}</div>
       )}
+
+      <div className="space-y-2">
+        <h3 className="text-sm font-semibold">Notes from your recommendation</h3>
+        {networkNotes.length > 0 ? (
+          <ul className="space-y-1 text-sm text-slate-700">
+            {networkNotes.map((note, idx) => (
+              <li key={idx} className="flex gap-2">
+                <span className="mt-1 h-1.5 w-1.5 rounded-full bg-slate-400" />
+                <span>{note}</span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-sm text-slate-500">
+            Notes from your last recommendation will appear underneath the graph.
+          </p>
+        )}
+      </div>
     </div>
   );
 }
@@ -249,19 +352,39 @@ function RelFilters({
           </label>
         )
       )}
-    </div>
+      </div>
   );
 }
 
-function buildLabeledNode(n: NutrientNode, metric: SizeMetric, three: any) {
+function buildLabeledNode(n: NutrientNode, metric: SizeMetric, three: any, highlighted = false) {
   const group = new three.Group();
   const radius = 5 + 12 * (n[metric] ?? 0.5);
+  const sphereRadius = Math.max(radius * 0.2, 1.5);
+  const baseColor = NODE_COLORS[n.type] || "#0ea5e9";
 
   const sphere = new three.Mesh(
-    new three.SphereGeometry(Math.max(radius * 0.2, 1.5), 16, 16),
-    new three.MeshLambertMaterial({ color: NODE_COLORS[n.type] })
+    new three.SphereGeometry(sphereRadius, 16, 16),
+    highlighted
+      ? new three.MeshLambertMaterial({
+          color: baseColor,
+          emissive: "#ef4444",
+          emissiveIntensity: 0.4,
+        })
+      : new three.MeshLambertMaterial({ color: baseColor })
   );
   group.add(sphere);
+
+  if (highlighted) {
+    const glow = new three.Mesh(
+      new three.SphereGeometry(sphereRadius * 1.6, 12, 12),
+      new three.MeshBasicMaterial({
+        color: "#ef4444",
+        transparent: true,
+        opacity: 0.25,
+      })
+    );
+    group.add(glow);
+  }
 
   const label = makeTextSprite(three, n.label, "#ffffff", "rgba(0,0,0,0.65)");
   if (label) {

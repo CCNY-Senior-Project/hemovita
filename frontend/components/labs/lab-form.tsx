@@ -73,6 +73,38 @@ type ReportResponse = {
   risk_profile?: RiskProfile;
 };
 
+type RecommendationSnapshot = {
+  deficiencies: string[];
+  highRisk: string[];
+  networkNotes: string[];
+  createdAt: number;
+};
+
+function persistRecommendationSnapshot(result: ReportResponse) {
+  if (typeof window === "undefined") return;
+
+  try {
+    const deficiencies =
+      Object.entries(result.labels || {})
+        .filter(([, status]) => status && status !== "normal" && status !== "unknown")
+        .map(([marker]) => marker) ?? [];
+
+    const highRisk =
+      result.risk_profile?.high_risk_micronutrients?.map((m) => m.micronutrient) ?? [];
+
+    const snapshot: RecommendationSnapshot = {
+      deficiencies,
+      highRisk,
+      networkNotes: result.network_notes ?? [],
+      createdAt: Date.now(),
+    };
+
+    localStorage.setItem("hemovita:lastRecommendation", JSON.stringify(snapshot));
+  } catch (err) {
+    console.error("Failed to persist recommendation snapshot", err);
+  }
+}
+
 const SUPPORTED_COUNTRIES = [
   "Bangladesh",
   "Brazil",
@@ -420,6 +452,7 @@ export function LabForm() {
         const data: ReportResponse = await res.json();
         setResult(data);
         setLastLabs(values);
+        persistRecommendationSnapshot(data);
       } catch (err: any) {
         console.error(err);
         setError(
