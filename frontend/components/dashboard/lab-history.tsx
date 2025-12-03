@@ -1,22 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useTransition } from "react";
 
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
-import {
-  Table,
-  TableHeader,
-  TableRow,
-  TableHead,
-  TableBody,
-  TableCell,
-} from "@/components/ui/table";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 
 type LabEntry = {
@@ -32,30 +20,21 @@ export function LabHistory({ initialEntries }: { initialEntries: LabEntry[] }) {
     initialEntries.map((e) => ({
       ...e,
       createdAt: new Date(e.createdAt),
-    }))
+    })),
   );
 
   const [isPending, startTransition] = useTransition();
 
-  function handleDelete(id: string) {
-    startTransition(async () => {
-      try {
-        const res = await fetch(`/api/labs/${id}`, {
-          method: "DELETE",
-        });
-
-        if (!res.ok) {
-          const text = await res.text();
-          console.error("Failed to delete lab entry", res.status, text);
-          return;
-        }
-
-        // Remove from UI
-        setEntries((prev) => prev.filter((e) => e.id !== id));
-      } catch (err) {
-        console.error("Failed to delete lab entry", err);
+  async function handleDelete(id: string) {
+    try {
+      const res = await fetch(`/api/labs/${id}`, { method: "DELETE" });
+      if (!res.ok) {
+        throw new Error(await res.text());
       }
-    });
+      setEntries((prev) => prev.filter((e) => e.id !== id));
+    } catch (err) {
+      console.error("Failed to delete lab entry", err);
+    }
   }
 
   return (
@@ -67,8 +46,7 @@ export function LabHistory({ initialEntries }: { initialEntries: LabEntry[] }) {
       <CardContent>
         {entries.length === 0 ? (
           <p className="text-sm text-muted-foreground">
-            You don&apos;t have any saved lab entries yet. Run your first
-            analysis to see it here.
+            You don&apos;t have any saved lab entries yet. Run your first analysis to see it here.
           </p>
         ) : (
           <Table>
@@ -92,7 +70,10 @@ export function LabHistory({ initialEntries }: { initialEntries: LabEntry[] }) {
                   <TableCell>{entry.Hemoglobin ?? "—"}</TableCell>
                   <TableCell>{entry.ferritin ?? "—"}</TableCell>
                   <TableCell>{entry.vitamin_D ?? "—"}</TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="flex justify-end gap-2">
+                    <Button asChild variant="ghost" size="sm">
+                      <Link href={`/labs/${entry.id}`}>View</Link>
+                    </Button>
                     <Button
                       variant="ghost"
                       size="sm"
@@ -111,3 +92,4 @@ export function LabHistory({ initialEntries }: { initialEntries: LabEntry[] }) {
     </Card>
   );
 }
+
