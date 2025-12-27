@@ -2,6 +2,8 @@
 
 HemoVita turns lab results into clear deficiency flags and follow-up suggestions. It pairs a Next.js app for data entry and visualization with a small Python toolkit for exploring nutrient interaction graphs.
 ---
+#### Link to site: https://hemovita.vercel.app/
+---
 
 ## 💡 Why HemoVita?  
 Micronutrient deficiencies—especially in Iron, B12, and Vitamin D—are common, underdiagnosed, and difficult for non-experts to interpret. HemoVita transforms raw blood test data into clear, personalized health recommendations using AI.  
@@ -125,6 +127,7 @@ Open a new terminal:
 9) npx prisma db push
 10) npm run dev
 11) Frontend: http://localhost:3000/
+
 
 
 
