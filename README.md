@@ -107,23 +107,24 @@ Deficiencies are detected using a hybrid method:
 - **SQLite** (initial) → **PostgreSQL** (scalable)
 
 ## Instructions to run backend and frontend respectively
-git clone https://github.com/CCNY-Senior-Project/hemovita.git
-cd hemovita
-cd backend
-pip install -r requirements.txt
-uvicorn app.main:app --reload
+1) git clone https://github.com/CCNY-Senior-Project/hemovita.git
+2) cd hemovita
+3) cd backend
+4) pip install -r requirements.txt
+5) uvicorn app.main:app --reload
 
 Open a new terminal:
-cd frontend
-npm install
-frontend/.env
-DATABASE_URL="file:./dev.db"
-NEXTAUTH_SECRET="dev_secret_change_me"
-NEXTAUTH_URL="http://localhost:3000/"
-REC_ENGINE_URL="http://127.0.0.1:8000/"
-npx prisma generate
-npx prisma db push
-npm run dev
-Frontend: http://localhost:3000/
+1) cd frontend
+2) npm install
+3) frontend/.env
+4) DATABASE_URL="file:./dev.db"
+5) NEXTAUTH_SECRET="dev_secret_change_me"
+6) NEXTAUTH_URL="http://localhost:3000/"
+7) REC_ENGINE_URL="http://127.0.0.1:8000/"
+8) npx prisma generate
+9) npx prisma db push
+10) npm run dev
+11) Frontend: http://localhost:3000/
+
 
 
